@@ -12,6 +12,9 @@ export default defineConfig({
     vue(),
     vueDevTools(),
     Components({
+      dirs: ['src/components'],
+      extensions: ['vue'],
+      deep: true,
       resolvers: [PrimeVueResolver()],
     }),
   ],

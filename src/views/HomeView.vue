@@ -2,6 +2,15 @@
 
 <template>
   <div class="">
-    <h1 class="text-3xl font-bold underline">Home</h1>
+    <h1>Home</h1>
+    <base-card>
+      <template #default>
+        <p>
+          Lorem ipsum dolor sit amet consectetur adipisicing elit. Repellat consequatur molestiae
+          quisquam quos, at magnam, consectetur ut provident vel unde cupiditate! Itaque veniam
+          consectetur, animi consequatur nobis eum laborum quidem.
+        </p>
+      </template>
+    </base-card>
   </div>
 </template>
