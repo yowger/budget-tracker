@@ -3,8 +3,8 @@
     <app-topbar></app-topbar>
     <app-sidebar></app-sidebar>
 
-    <div class="flex flex-col min-h-screen justify-between pt-24 px-8 pb-0 bg-green-200 ml-[17rem]">
-      <div class="flex-1 pb-8 bg-blue-200">
+    <div class="flex flex-col min-h-screen justify-between pt-24 px-8 pb-0 ml-[18rem]">
+      <div class="flex-1 pb-8">
         <router-view></router-view>
       </div>
 
