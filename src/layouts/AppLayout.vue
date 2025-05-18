@@ -1,5 +1,5 @@
 <template>
-  <div class="min-h-screen">
+  <div class="min-h-screen bg-surface-200 dark:bg-surface-800">
     <app-topbar></app-topbar>
     <app-sidebar
       v-bind:ref="'sidebar-ref'"
@@ -21,8 +21,9 @@
     </div>
 
     <div
-      v-bind:class="[
-        'md:hidden fixed top-0 left-0 w-full h-full bg-gray-900/25 z-[998]',
+      :class="[
+        'md:hidden fixed top-0 left-0 w-full h-full z-[998]',
+        'bg-gray-900/20 dark:bg-gray-900/60',
         layoutMaskClasses,
       ]"
     ></div>

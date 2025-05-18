@@ -19,5 +19,8 @@ export const useLayoutStore = defineStore('layout', {
         this.state.staticMenuMobileActive = !this.state.staticMenuMobileActive
       }
     },
+    toggleDarkMode() {
+      document.documentElement.classList.toggle('my-app-dark')
+    },
   },
 })
