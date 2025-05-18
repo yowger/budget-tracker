@@ -19,6 +19,13 @@
 
       <app-footer></app-footer>
     </div>
+
+    <div
+      v-bind:class="[
+        'md:hidden fixed top-0 left-0 w-full h-full bg-gray-900/25 z-[998]',
+        layoutMaskClasses,
+      ]"
+    ></div>
   </div>
 </template>
 
@@ -57,5 +64,9 @@ const menuDesktopClasses = computed(() => {
 
 const menuMobileClasses = computed(() => {
   return layout.state.staticMenuMobileActive ? 'translate-x-0 left-0' : '-translate-x-full left-0'
+})
+
+const layoutMaskClasses = computed(() => {
+  return layout.state.staticMenuMobileActive ? 'sm:block' : 'hidden'
 })
 </script>
