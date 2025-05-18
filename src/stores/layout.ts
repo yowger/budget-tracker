@@ -10,9 +10,9 @@ export const useLayoutStore = defineStore('layout', {
   }),
   actions: {
     toggleMenu() {
-      const isDesktopOrLarger = window.innerWidth > 991
+      const isTabletOrLarger = window.innerWidth > 768
 
-      if (isDesktopOrLarger) {
+      if (isTabletOrLarger) {
         this.state.staticMenuDesktopInactive = !this.state.staticMenuDesktopInactive
         this.state.staticMenuMobileActive = false
       } else {
