@@ -1,12 +1,16 @@
 <template>
   <div class="min-h-screen">
     <app-topbar></app-topbar>
-    <app-sidebar></app-sidebar>
+    <app-sidebar
+      v-bind:ref="'sidebar-ref'"
+      v-bind:desktopClasses="menuDesktopClasses"
+      v-bind:mobileClasses="menuMobileClasses"
+    ></app-sidebar>
 
     <div
-      :class="[
+      v-bind:class="[
         'flex flex-col min-h-screen justify-between pt-24 px-8 pb-0 transition-all duration-300 ease-in-out',
-        mainDesktopResponsiveClasses,
+        mainDesktopClasses,
       ]"
     >
       <div class="flex-1 pb-8">
@@ -19,7 +23,8 @@
 </template>
 
 <script setup lang="ts">
-import { computed } from 'vue'
+import { computed, useTemplateRef } from 'vue'
+import { onClickOutside } from '@vueuse/core'
 
 import AppFooter from '@/layouts/AppFooter.vue'
 import AppSidebar from '@/layouts/AppSidebar.vue'
@@ -28,7 +33,29 @@ import { useLayoutStore } from '@/stores/layout'
 
 const layout = useLayoutStore()
 
-const mainDesktopResponsiveClasses = computed(() => {
+const sidebarRef = useTemplateRef<HTMLElement | null>('sidebar-ref')
+
+function closeMenu() {
+  layout.state.staticMenuMobileActive = false
+}
+
+onClickOutside(sidebarRef, () => {
+  if (layout.state.staticMenuMobileActive) {
+    closeMenu()
+  }
+})
+
+const mainDesktopClasses = computed(() => {
   return layout.state.staticMenuDesktopInactive ? 'ml-0 pl-4' : 'md:ml-[18rem]'
+})
+
+const menuDesktopClasses = computed(() => {
+  return layout.state.staticMenuDesktopInactive
+    ? '-translate-x-full bg-green-200'
+    : 'md:left-8 bg-red-200 -translate-x-full md:translate-x-0'
+})
+
+const menuMobileClasses = computed(() => {
+  return layout.state.staticMenuMobileActive ? 'translate-x-0 left-0' : '-translate-x-full left-0'
 })
 </script>

@@ -14,6 +14,7 @@ export const useLayoutStore = defineStore('layout', {
 
       if (isDesktopOrLarger) {
         this.state.staticMenuDesktopInactive = !this.state.staticMenuDesktopInactive
+        this.state.staticMenuMobileActive = false
       } else {
         this.state.staticMenuMobileActive = !this.state.staticMenuMobileActive
       }
