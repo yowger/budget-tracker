@@ -1,5 +1,5 @@
 <template>
-  <div class="fixed top-0 left-0 h-14 w-full px-4 flex items-center justify-between bg-white">
+  <div class="fixed top-0 left-0 h-14 w-full px-4 flex items-center justify-between bg-surface-800">
     <div class="inline-flex gap-1 items-center">
       <Button v-on:click="layout.toggleMenu()" icon="pi pi-bars" variant="text"></Button>
 

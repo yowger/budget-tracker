@@ -2,15 +2,22 @@
 
 <template>
   <div class="">
-    <h1>Home</h1>
-    <base-card>
-      <template #default>
-        <p>
-          Lorem ipsum dolor sit amet consectetur adipisicing elit. Repellat consequatur molestiae
-          quisquam quos, at magnam, consectetur ut provident vel unde cupiditate! Itaque veniam
-          consectetur, animi consequatur nobis eum laborum quidem.
+    <Card style="width: 25rem; overflow: hidden">
+      <template #title>Advanced Card</template>
+      <template #subtitle>Card subtitle</template>
+      <template #content>
+        <p class="m-0">
+          Lorem ipsum dolor sit amet, consectetur adipisicing elit. Inventore sed consequuntur error
+          repudiandae numquam deserunt quisquam repellat libero asperiores earum nam nobis, culpa
+          ratione quam perferendis esse, cupiditate neque quas!
         </p>
       </template>
-    </base-card>
+      <template #footer>
+        <div class="flex gap-4 mt-1">
+          <Button label="Cancel" severity="secondary" outlined class="w-full"></Button>
+          <Button label="Save" class="w-full"></Button>
+        </div>
+      </template>
+    </Card>
   </div>
 </template>

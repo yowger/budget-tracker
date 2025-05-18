@@ -11,9 +11,12 @@ declare module 'vue' {
     BaseCard: typeof import('./src/components/base/BaseCard.vue')['default']
     Button: typeof import('primevue/button')['default']
     Card: typeof import('primevue/card')['default']
+    DatePicker: typeof import('primevue/datepicker')['default']
     FloatLabel: typeof import('primevue/floatlabel')['default']
     InputText: typeof import('primevue/inputtext')['default']
     RouterLink: typeof import('vue-router')['RouterLink']
     RouterView: typeof import('vue-router')['RouterView']
+    Select: typeof import('primevue/select')['default']
+    Textarea: typeof import('primevue/textarea')['default']
   }
 }
