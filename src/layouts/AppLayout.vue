@@ -9,7 +9,7 @@
 
     <div
       v-bind:class="[
-        'flex flex-col min-h-screen justify-between pt-24 px-8 pb-0 transition-all duration-300 ease-in-out',
+        'flex flex-col min-h-screen justify-between pt-20 px-6 pb-0 transition-all duration-300 ease-in-out',
         mainDesktopClasses,
       ]"
     >
@@ -54,13 +54,13 @@ onClickOutside(sidebarRef, () => {
 })
 
 const mainDesktopClasses = computed(() => {
-  return layout.state.staticMenuDesktopInactive ? 'ml-0 pl-4' : 'md:ml-[18rem]'
+  return layout.state.staticMenuDesktopInactive ? 'ml-0 pl-6' : 'md:ml-[18rem]'
 })
 
 const menuDesktopClasses = computed(() => {
   return layout.state.staticMenuDesktopInactive
     ? '-translate-x-full bg-green-200'
-    : 'md:left-8 bg-red-200 -translate-x-full md:translate-x-0'
+    : 'md:left-7 bg-red-200 -translate-x-full md:translate-x-0'
 })
 
 const menuMobileClasses = computed(() => {
