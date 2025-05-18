@@ -6,7 +6,7 @@
     <div
       :class="[
         'flex flex-col min-h-screen justify-between pt-24 px-8 pb-0 transition-all duration-300 ease-in-out',
-        mainResponsiveClasses,
+        mainDesktopResponsiveClasses,
       ]"
     >
       <div class="flex-1 pb-8">
@@ -28,7 +28,7 @@ import { useLayoutStore } from '@/stores/layout'
 
 const layout = useLayoutStore()
 
-const mainResponsiveClasses = computed(() => {
-  return layout.state.overlayMenuActive ? 'ml-[18rem]' : 'ml-0 pl-4'
+const mainDesktopResponsiveClasses = computed(() => {
+  return layout.state.staticMenuDesktopInactive ? 'ml-0 pl-4' : 'md:ml-[18rem]'
 })
 </script>

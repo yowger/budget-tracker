@@ -1,8 +1,9 @@
 <template>
   <div
     :class="[
-      'fixed w-64 bg-white h-screen md:h-[calc(100vh-8rem)] rounded-sm p-4 z-[999] top-0 md:top-24 left-0 transition-all duration-300 ease-in-out',
-      sidebarResponsiveClasses,
+      'fixed w-64 bg-white h-screen md:h-[calc(100vh-8rem)] rounded-sm p-4 z-[999] top-0 md:top-24 transition-left duration-300 ease-in-out',
+      mainDesktopResponsiveClasses,
+      // sidebarMobileResponsiveClasses,
     ]"
   >
     <app-menu></app-menu>
@@ -17,7 +18,13 @@ import { useLayoutStore } from '@/stores/layout'
 
 const layout = useLayoutStore()
 
-const sidebarResponsiveClasses = computed(() => {
-  return layout.state.overlayMenuActive ? 'translate-x-0 left-8' : '-translate-x-full left-0'
+const mainDesktopResponsiveClasses = computed(() => {
+  return layout.state.staticMenuDesktopInactive
+    ? 'md:-translate-x-full md:left-0 bg-green-200'
+    : 'md:left-8 bg-red-200 -translate-x-full md:translate-x-0'
+})
+
+const sidebarMobileResponsiveClasses = computed(() => {
+  return layout.state.staticMenuMobileActive ? 'translate-x-0 left-0' : '-translate-x-full left-0'
 })
 </script>
