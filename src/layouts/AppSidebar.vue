@@ -1,12 +1,12 @@
 <template>
   <div
     v-bind:class="[
-      'fixed w-64 bg-surface-100 dark:bg-surface-900 h-screen md:h-[calc(100vh-8rem)] rounded p-4 z-[999] top-0 md:top-20 transition-left duration-300 ease-in-out',
+      'fixed w-64 bg-surface-100 dark:bg-surface-900 h-screen md:h-[calc(100vh-6rem)] rounded p-4 z-[999] top-0 md:top-20 transition-left duration-300 ease-in-out',
       props.desktopClasses,
       props.mobileClasses,
     ]"
   >
-    <p>app menu</p>
+    <app-menu></app-menu>
   </div>
 </template>
 
@@ -15,4 +15,6 @@ const props = defineProps<{
   desktopClasses: string
   mobileClasses: string
 }>()
+
+import AppMenu from '@/layouts/AppMenu.vue'
 </script>
