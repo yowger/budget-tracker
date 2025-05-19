@@ -5,10 +5,13 @@
         v-bind:to="item.to"
         v-if="item.to"
         class="px-2 py-1.5 flex items-center rounded hover:bg-gray-100 dark:hover:bg-surface-700"
-        v-slot="{ isActive }"
+        v-slot="{ isExactActive }"
       >
-        <i v-bind:class="[isActive ? 'text-primary' : 'text-color', item.icon]" class="mr-2"></i>
-        <span v-bind:class="[isActive ? 'text-primary font-semibold' : 'text-color']">{{
+        <i
+          v-bind:class="[isExactActive ? 'text-primary' : 'text-color', item.icon]"
+          class="mr-2"
+        ></i>
+        <span v-bind:class="[isExactActive ? 'text-primary font-semibold' : 'text-color']">{{
           item.label
         }}</span>
       </router-link>
