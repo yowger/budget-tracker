@@ -1,14 +1,26 @@
 <template>
   <li>
     <div>
-      <div v-if="item.to" class="px-2 py-1.5 flex items-center hover:bg-secondary">
-        <i :class="item.icon" class="mr-2"></i>
-        <router-link :to="item.to">{{ item.label }}</router-link>
-      </div>
+      <router-link
+        v-bind:to="item.to"
+        v-if="item.to"
+        class="px-2 py-1.5 flex items-center rounded hover:bg-gray-100 dark:hover:bg-surface-700"
+        v-slot="{ isActive }"
+      >
+        <i v-bind:class="[isActive ? 'text-primary' : 'text-color', item.icon]" class="mr-2"></i>
+        <span v-bind:class="[isActive ? 'text-primary font-semibold' : 'text-color']">{{
+          item.label
+        }}</span>
+      </router-link>
 
-      <span v-else class="text-sm uppercase font-medium text-color my-[0.75rem] block">{{
-        item.label
-      }}</span>
+      <span
+        v-else
+        :class="[
+          'text-sm uppercase font-medium text-color block',
+          index === 0 ? 'mb-3' : 'my-[0.75rem]',
+        ]"
+        >{{ item.label }}</span
+      >
     </div>
 
     <ul v-if="item.items && item.items.length">
@@ -27,5 +39,5 @@ interface MenuItem {
   to?: string
 }
 
-const props = defineProps<{ item: MenuItem }>()
+const props = defineProps<{ index?: number; item: MenuItem }>()
 </script>

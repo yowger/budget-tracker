@@ -1,9 +1,9 @@
 <template>
   <div class="flex flex-column h-full">
     <div class="overflow-y-auto w-full">
-      <ul>
-        <template v-for="item in menuItems" :key="item">
-          <app-menu-item v-bind:item="item"></app-menu-item>
+      <ul class="p-5">
+        <template v-for="(item, index) in menuItems" :key="item">
+          <app-menu-item v-bind:item="item" v-bind:index="index"></app-menu-item>
         </template>
       </ul>
     </div>
