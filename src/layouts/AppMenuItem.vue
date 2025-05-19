@@ -1,8 +1,11 @@
 <template>
   <li>
     <div>
-      <i :class="item.icon"></i>
-      <router-link v-if="item.to" :to="item.to">{{ item.label }}</router-link>
+      <div v-if="item.to" class="px-2 py-1.5 flex items-center hover:bg-secondary">
+        <i :class="item.icon" class="mr-2"></i>
+        <router-link :to="item.to">{{ item.label }}</router-link>
+      </div>
+
       <span v-else class="text-sm uppercase font-medium text-color my-[0.75rem] block">{{
         item.label
       }}</span>

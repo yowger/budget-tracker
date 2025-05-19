@@ -1,5 +1,5 @@
 <template>
-  <div class="min-h-screen bg-surface-200 dark:bg-surface-800">
+  <div class="min-h-screen bg-surface-200 dark:bg-surface-900">
     <app-topbar></app-topbar>
     <app-sidebar
       v-bind:ref="'sidebar-ref'"
