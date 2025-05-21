@@ -14,7 +14,9 @@
       ]"
     >
       <div class="flex-1 pb-8">
-        <router-view></router-view>
+        <div class="flex flex-col gap-4">
+          <router-view></router-view>
+        </div>
       </div>
 
       <app-footer></app-footer>

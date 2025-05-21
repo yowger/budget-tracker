@@ -8,6 +8,7 @@ export {}
 /* prettier-ignore */
 declare module 'vue' {
   export interface GlobalComponents {
+    AppBreadCrumb: typeof import('./src/components/AppBreadCrumb.vue')['default']
     Avatar: typeof import('primevue/avatar')['default']
     Badge: typeof import('primevue/badge')['default']
     BaseCard: typeof import('./src/components/base/BaseCard.vue')['default']

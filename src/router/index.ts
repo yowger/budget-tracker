@@ -11,7 +11,7 @@ const router = createRouter({
       children: [
         {
           path: '',
-          name: 'home',
+          name: 'dashboard',
           component: () => import('@/views/dashboard/HomeView.vue'),
         },
         {
@@ -21,6 +21,9 @@ const router = createRouter({
               path: 'transactions',
               name: 'budget/expenses',
               component: () => import('@/views/dashboard/transactionView.vue'),
+              meta: {
+                breadcrumb: [{ label: 'Budget' }, { label: 'Transactions', active: true }],
+              },
             },
           ],
         },

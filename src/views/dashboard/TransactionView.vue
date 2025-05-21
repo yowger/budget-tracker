@@ -1,21 +1,13 @@
 <template>
-  <div class="flex flex-col gap-4">
-    <bread-crumb :home="home" :model="items" />
+  <app-bread-crumb></app-bread-crumb>
+  <card>
+    <template #title> Transactions </template>
+    <template #content>
+      <div>filter</div>
 
-    <card>
-      <template #title> Transactions </template>
-      <template #content>
-        <div>nice</div>
-      </template>
-    </card>
-  </div>
+      <div>nice</div>
+    </template>
+  </card>
 </template>
 
-<script setup>
-import { ref } from 'vue'
-
-const home = ref({
-  icon: 'pi pi-home',
-})
-const items = ref([{ label: 'Budget' }, { label: 'Transactions' }])
-</script>
+<script setup></script>
