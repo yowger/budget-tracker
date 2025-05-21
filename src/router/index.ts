@@ -15,6 +15,16 @@ const router = createRouter({
           component: () => import('@/views/dashboard/HomeView.vue'),
         },
         {
+          path: 'budget',
+          children: [
+            {
+              path: 'transactions',
+              name: 'budget/expenses',
+              component: () => import('@/views/dashboard/transactionView.vue'),
+            },
+          ],
+        },
+        {
           path: 'settings/profile',
           name: 'profile',
           component: () => import('@/views/dashboard/ProfileView.vue'),

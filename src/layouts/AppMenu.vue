@@ -26,6 +26,7 @@ const menuItems = ref([
       { label: 'Overview', icon: 'pi pi-fw pi-chart-bar', to: '/budget/overview' },
       { label: 'Income', icon: 'pi pi-fw pi-wallet', to: '/budget/income' },
       { label: 'Expenses', icon: 'pi pi-fw pi-shopping-cart', to: '/budget/expenses' },
+      { label: 'Transactions', icon: 'pi pi-fw pi-list', to: '/budget/transactions' },
       { label: 'Categories', icon: 'pi pi-fw pi-tags', to: '/budget/categories' },
       { label: 'Recurring', icon: 'pi pi-fw pi-refresh', to: '/budget/recurring' },
     ],

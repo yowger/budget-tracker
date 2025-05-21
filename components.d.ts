@@ -11,6 +11,8 @@ declare module 'vue' {
     Avatar: typeof import('primevue/avatar')['default']
     Badge: typeof import('primevue/badge')['default']
     BaseCard: typeof import('./src/components/base/BaseCard.vue')['default']
+    Breadcrumb: typeof import('primevue/breadcrumb')['default']
+    BreadCrumb: typeof import('primevue/breadcrumb')['default']
     Button: typeof import('primevue/button')['default']
     Card: typeof import('primevue/card')['default']
     DatePicker: typeof import('primevue/datepicker')['default']

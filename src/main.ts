@@ -46,6 +46,37 @@ const MyPreset = definePreset(Aura, {
         },
       },
     },
+    breadcrumb: {
+      colorScheme: {
+        light: {
+          root: {
+            background: '{transparent}',
+            padding: '{space.0}',
+          },
+          item: {
+            color: '{gray.900}',
+
+            icon: {
+              color: '{gray.700}',
+            },
+          },
+          separator: {
+            color: '{gray.500}',
+          },
+        },
+        dark: {
+          item: {
+            color: '{gray.300}',
+            icon: {
+              color: '{gray.300}',
+            },
+          },
+          separator: {
+            color: '{gray.500}',
+          },
+        },
+      },
+    },
   },
 })
 
