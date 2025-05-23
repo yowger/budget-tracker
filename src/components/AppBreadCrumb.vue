@@ -31,4 +31,6 @@ const home = {
 const items = computed(() => {
   return route.meta.breadcrumb ?? []
 })
+
+console.log('🚀 ~ items ~ items:', items)
 </script>
