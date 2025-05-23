@@ -1,18 +1,20 @@
 <template>
   <Breadcrumb v-bind:home="home" v-bind:model="items">
     <template #item="{ item, props }">
-      <router-link v-slot="{ href, navigate }" v-bind:to="item.route" custom>
-        <a v-bind:href="href" v-bind="props.action" @click="navigate">
-          <span v-if="item.icon" :class="[item.icon, 'text-color']"></span>
-          <span
-            :class="[
-              item.active ? 'text-primary font-semibold' : 'text-surface-700 dark:text-surface-0',
-            ]"
-          >
+      <router-link v-if="item.route" v-slot="{ href, navigate }" :to="item.route" custom>
+        <a :href="href" v-bind="props.action" @click="navigate">
+          <span v-if="item.icon" :class="[item.icon, 'text-zinc-500 dark:text-surface-400']"></span>
+
+          <span class="font-medium text-zinc-500 dark:text-surface-400 cursor-pointer">
             {{ item.label }}
           </span>
         </a>
       </router-link>
+
+      <span v-else class="font-medium text-zinc-500 dark:text-surface-400 cursor-default">
+        <span v-if="item.icon" :class="[item.icon, 'text-zinc-500 dark:text-surface-400']"></span>
+        {{ item.label }}
+      </span>
     </template>
   </Breadcrumb>
 </template>
@@ -31,6 +33,4 @@ const home = {
 const items = computed(() => {
   return route.meta.breadcrumb ?? []
 })
-
-console.log('🚀 ~ items ~ items:', items)
 </script>

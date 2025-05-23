@@ -22,7 +22,7 @@ const router = createRouter({
               name: 'budget/expenses',
               component: () => import('@/views/dashboard/TransactionView.vue'),
               meta: {
-                breadcrumb: [{ label: 'Budget' }, { label: 'Transactions', active: true }],
+                breadcrumb: [{ label: 'Budget' }, { label: 'Transactions' }],
               },
             },
           ],
