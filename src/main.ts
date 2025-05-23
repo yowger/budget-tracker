@@ -6,7 +6,7 @@ import { createPinia } from 'pinia'
 import { createApp } from 'vue'
 
 import App from '@/App.vue'
-import router from './router'
+import router from '@/router'
 import { definePreset } from '@primeuix/themes'
 
 const app = createApp(App)

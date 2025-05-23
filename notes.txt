@@ -1,2 +1,35 @@
 TODOS:
 AppTopbar -> dropdown menu for right side section
+
+ENTITIES
+Transaction
+id
+name
+amount
+type - income/expense
+categoryId
+date
+notes
+createdAt
+updatedAt
+
+Category
+id
+name
+type
+icon
+
+Account
+id
+name
+balance
+type - bank/cash/credit
+
+Budget
+id
+categoryId
+amount
+period - 
+
+User - firebase account
+

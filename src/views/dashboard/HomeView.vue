@@ -1,5 +1,3 @@
-<script setup lang="ts"></script>
-
 <template>
   <div class="">
     <Card style="width: 25rem; overflow: hidden">
@@ -21,3 +19,5 @@
     </Card>
   </div>
 </template>
+
+<script setup lang="ts"></script>
