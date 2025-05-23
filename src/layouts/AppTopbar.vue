@@ -22,9 +22,7 @@
 <script setup lang="ts">
 import { RouterLink } from 'vue-router'
 
-import { useLayoutStore } from '@/stores/layout'
+import useLayoutStore from '@/stores/layout'
 
 const layout = useLayoutStore()
 </script>
-
-

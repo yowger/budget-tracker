@@ -39,7 +39,7 @@ import { onClickOutside } from '@vueuse/core'
 import AppFooter from '@/layouts/AppFooter.vue'
 import AppSidebar from '@/layouts/AppSidebar.vue'
 import AppTopbar from '@/layouts/AppTopbar.vue'
-import { useLayoutStore } from '@/stores/layout'
+import useLayoutStore from '@/stores/layout'
 
 const layout = useLayoutStore()
 
