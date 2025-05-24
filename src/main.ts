@@ -1,5 +1,6 @@
 import './styles/main.css'
 
+import { VueQueryPlugin } from '@tanstack/vue-query'
 import PrimeVue from 'primevue/config'
 import { createPinia } from 'pinia'
 import { createApp } from 'vue'
@@ -7,29 +8,27 @@ import { createApp } from 'vue'
 import App from '@/App.vue'
 import { auth } from '@/includes/firebase'
 import router from '@/router'
-import MyPreset from '@/themes/myPreset'
+import useUserStore from '@/stores/user'
+import themeConfig from '@/themes/themeConfig'
 
 let app: ReturnType<typeof createApp> | undefined
 
-auth.onAuthStateChanged(() => {
+auth.onAuthStateChanged((user) => {
   if (!app) {
-    const app = createApp(App)
+    app = createApp(App)
 
     app.use(createPinia())
     app.use(router)
+    app.use(VueQueryPlugin)
+    app.use(PrimeVue, themeConfig)
 
-    app.use(PrimeVue, {
-      theme: {
-        preset: MyPreset,
-        options: {
-          darkModeSelector: '.my-app-dark',
-          cssLayer: {
-            name: 'primevue',
-            order: 'tailwind-base, primevue, tailwind-utilities',
-          },
-        },
-      },
-    })
+    const userStore = useUserStore()
+
+    if (user) {
+      userStore.setUser(user)
+    } else {
+      userStore.clearUser()
+    }
 
     app.mount('#app')
   }

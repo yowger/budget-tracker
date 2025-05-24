@@ -67,4 +67,17 @@ const MyPreset = definePreset(Aura, {
   },
 })
 
-export default MyPreset
+const themeConfig = {
+  theme: {
+    preset: MyPreset,
+    options: {
+      darkModeSelector: '.my-app-dark',
+      cssLayer: {
+        name: 'primevue',
+        order: 'tailwind-base, primevue, tailwind-utilities',
+      },
+    },
+  },
+}
+
+export default themeConfig

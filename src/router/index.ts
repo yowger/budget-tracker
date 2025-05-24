@@ -57,19 +57,22 @@ const router = createRouter({
 })
 
 router.beforeEach((to, from, next) => {
-  if (!to.meta.requiresAuth) {
-    next()
+  const requiresAuth = to.meta.requiresAuth
 
-    return
+  if (!requiresAuth) {
+    return next()
   }
 
   const userStore = useUserStore()
+  const hasUser = userStore.user?.uid
 
-  if (userStore.user) {
-    next()
-  } else {
-    next({ name: 'login' })
+  if (hasUser) {
+    return next()
   }
+
+  userStore.redirectAfterLogin = to.fullPath
+
+  next({ name: 'login' })
 })
 
 export default router
