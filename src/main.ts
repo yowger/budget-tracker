@@ -11,13 +11,14 @@ import router from '@/router'
 import useUserStore from '@/stores/user'
 import themeConfig from '@/themes/themeConfig'
 
+const pinia = createPinia()
 let app: ReturnType<typeof createApp> | undefined
 
 auth.onAuthStateChanged((user) => {
   if (!app) {
     app = createApp(App)
 
-    app.use(createPinia())
+    app.use(pinia)
     app.use(router)
     app.use(VueQueryPlugin)
     app.use(PrimeVue, themeConfig)
