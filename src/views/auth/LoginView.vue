@@ -6,12 +6,13 @@
       >
         <div class="flex flex-col items-center gap-4">
           <div class="flex flex-col items-center gap-2 w-full">
-            <h1 class="text-3xl md:text-4xl font-medium text-center mx-auto leading-[125%]">
+            <h1 class="text-3xl md:text-4xl font-medium text-center mx-auto leading-[125%] mb-2">
               Welcome <br />
               To BudgetMate
             </h1>
           </div>
         </div>
+
         <div class="flex flex-col gap-6 w-full">
           <Button
             @click="HandleGoogleLogin"
