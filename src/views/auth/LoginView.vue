@@ -16,6 +16,7 @@
         <div class="flex flex-col gap-6 w-full">
           <Button
             @click="HandleGoogleLogin"
+            v-bind:disabled="loading"
             label="Sign in with Google"
             icon="pi pi-google"
             variant="outlined"
@@ -37,6 +38,7 @@
             >
             <form-field v-slot="$field" name="email" class="flex flex-col gap-1.5">
               <input-text
+                v-bind:disabled="loading"
                 id="email1"
                 type="text"
                 placeholder="Email address"
@@ -61,6 +63,7 @@
             >
             <form-field v-slot="$field" name="password" class="flex flex-col gap-1.5">
               <input-text
+                v-bind:disabled="loading"
                 id="password1"
                 type="password"
                 placeholder="Password"
@@ -75,6 +78,11 @@
               </Message>
             </form-field>
           </div>
+
+          <Message v-if="authErrorMessage" severity="error" size="small">
+            {{ authErrorMessage }}
+          </Message>
+
           <div
             class="flex flex-col sm:flex-row items-start sm:items-center justify-between w-full gap-3 sm:gap-0"
           >
@@ -90,6 +98,7 @@
           </div>
         </div>
         <Button
+          v-bind:disabled="loading"
           type="submit"
           label="Login"
           class="w-full py-2 rounded-lg flex justify-center items-center gap-2"
@@ -108,13 +117,17 @@
 </template>
 
 <script setup lang="ts">
-import { reactive } from 'vue'
-import { useRouter } from 'vue-router'
 import { Form, type FormSubmitEvent } from '@primevue/forms'
 import { zodResolver } from '@primevue/forms/resolvers/zod'
+import { FirebaseError } from 'firebase/app'
+import { reactive, ref } from 'vue'
+import { useRouter } from 'vue-router'
 import { z } from 'zod'
 
 import useUserStore from '@/stores/user'
+
+const authErrorMessage = ref<string | null>(null)
+const loading = ref(false)
 
 const router = useRouter()
 const userStore = useUserStore()
@@ -141,11 +154,17 @@ const resolver = zodResolver(loginSchema)
 
 async function HandleLoginFormSubmit(form: FormSubmitEvent) {
   if (form.valid) {
+    authErrorMessage.value = null
+    loading.value = true
+
     try {
       await userStore.emailLogin(form.values.email, form.values.password)
       handleRedirect()
-    } catch (err) {
-      console.error('Login failed:', err)
+    } catch (error) {
+      const message = getFirebaseAuthErrorMessage(error)
+      authErrorMessage.value = message
+    } finally {
+      loading.value = false
     }
   }
 }
@@ -154,8 +173,8 @@ async function HandleGoogleLogin(): Promise<void> {
   try {
     await userStore.googleLogin()
     handleRedirect()
-  } catch (err) {
-    console.error('Google login failed:', err)
+  } catch (error) {
+    console.error('Google login failed:', error)
   }
 }
 
@@ -164,5 +183,26 @@ function handleRedirect(): void {
   userStore.redirectAfterLogin = null
 
   router.push(redirectUrl)
+}
+
+function getFirebaseAuthErrorMessage(error: unknown): string {
+  if (error instanceof FirebaseError) {
+    switch (error.code) {
+      case 'auth/invalid-credential':
+        return 'Invalid credentials. Please try again.'
+      case 'auth/user-not-found':
+        return 'No account found with this email.'
+      case 'auth/wrong-password':
+        return 'Incorrect password. Please try again.'
+      case 'auth/too-many-requests':
+        return 'Too many login attempts. Please wait and try again later.'
+      case 'auth/network-request-failed':
+        return 'Network error. Please check your connection.'
+      default:
+        return 'Login failed. Please try again.'
+    }
+  }
+
+  return 'An unexpected error occurred.'
 }
 </script>
