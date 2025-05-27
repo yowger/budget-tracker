@@ -1,11 +1,10 @@
 import { defineStore } from 'pinia'
 import {
+  createUserWithEmailAndPassword,
   signInWithEmailAndPassword,
   signInWithPopup,
-  GoogleAuthProvider,
   signOut,
 } from 'firebase/auth'
-import { FirebaseError } from 'firebase/app'
 
 import { auth, googleProvider } from '@/includes/firebase'
 
@@ -41,17 +40,14 @@ export default defineStore('user', {
       const user = result.user
       this.setUser(user)
     },
+    async emailRegister(email: string, password: string) {
+      const result = await createUserWithEmailAndPassword(auth, email, password)
+      this.setUser(result.user)
+    },
     async googleLogin() {
-      try {
-        const result = await signInWithPopup(auth, googleProvider)
-        const user = result.user
-        this.setUser(user)
-      } catch (error: unknown) {
-        if (error instanceof FirebaseError) {
-          const errorCode = error.code
-          const errorMessage = error.message
-        }
-      }
+      const result = await signInWithPopup(auth, googleProvider)
+      const user = result.user
+      this.setUser(user)
     },
     async signOut() {
       await signOut(auth)
@@ -59,5 +55,3 @@ export default defineStore('user', {
     },
   },
 })
-
-

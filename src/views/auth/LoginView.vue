@@ -17,7 +17,7 @@
           <Button
             @click="HandleGoogleLogin"
             v-bind:disabled="loading"
-            label="Sign in with Google"
+            label="Continue with Google"
             icon="pi pi-google"
             variant="outlined"
             class="w-full py-2 rounded-lg flex justify-center items-center gap-2"
@@ -107,8 +107,10 @@
 
         <div class="text-center w-full">
           <span class="text-surface-700 dark:text-surface-200 leading-normal">Not registered?</span>
-          <a class="text-primary font-medium ml-1 cursor-pointer hover:text-primary-emphasis"
-            >Create an Account</a
+          <router-link
+            v-bind:to="{ name: 'register' }"
+            class="text-primary font-medium ml-1 cursor-pointer hover:text-primary-emphasis"
+            >Create an Account</router-link
           >
         </div>
       </div>
@@ -134,13 +136,7 @@ const userStore = useUserStore()
 
 const loginSchema = z.object({
   email: z.string().email('Invalid email address').min(1, 'Email is required'),
-  password: z
-    .string()
-    .min(6, { message: 'Minimum 6 characters.' })
-    .max(127, { message: 'Maximum 127 characters.' })
-    .refine((value) => /[A-Z]/.test(value), {
-      message: 'Must have an uppercase letter.',
-    }),
+  password: z.string().min(1, { message: 'Password is required.' }),
 })
 
 type LoginForm = z.infer<typeof loginSchema>
@@ -174,6 +170,8 @@ async function HandleGoogleLogin(): Promise<void> {
     await userStore.googleLogin()
     handleRedirect()
   } catch (error) {
+    authErrorMessage.value = 'Failed to register with Google. Please try again.'
+
     console.error('Google login failed:', error)
   }
 }
