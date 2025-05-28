@@ -81,7 +81,7 @@ import { zodResolver } from '@primevue/forms/resolvers/zod'
 
 const emit = defineEmits<{
   (e: 'login', form: { email: string; password: string }): void
-  (e: 'google'): void
+  (e: 'googleLogin'): void
 }>()
 
 const loading = defineModel<boolean>('loading')
@@ -102,12 +102,11 @@ const resolver = zodResolver(loginSchema)
 function onSubmit(form: FormSubmitEvent) {
   if (form.valid) {
     const { email, password } = form.values
-
     emit('login', { email, password })
   }
 }
 
 function onGoogleLogin() {
-  emit('google')
+  emit('googleLogin')
 }
 </script>

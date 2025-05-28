@@ -7,8 +7,11 @@ describe('LoginForm', () => {
   it('renders email and password inputs', () => {
     const wrapper = mount(LoginForm)
 
-    expect(wrapper.find('input#email').exists()).toBe(true)
-    expect(wrapper.find('input#password').exists()).toBe(true)
+    const emailInput = wrapper.find('input[type="email"]')
+    expect(emailInput.exists()).toBe(true)
+
+    const passwordInput = wrapper.find('input[type="password"]')
+    expect(passwordInput.exists()).toBe(true)
   })
 
   it('disables inputs and buttons when loading', () => {
@@ -19,10 +22,14 @@ describe('LoginForm', () => {
       },
     })
 
-    expect(wrapper.find('input[type="email"]').attributes('disabled')).toBeDefined()
-    expect(wrapper.find('input[type="password"]').attributes('disabled')).toBeDefined()
+    const emailInput = wrapper.find('input[type="email"]')
+    expect(emailInput.attributes('disabled')).toBeDefined()
+
+    const passwordInput = wrapper.find('input[type="password"]')
+    expect(passwordInput.attributes('disabled')).toBeDefined()
 
     const buttons = wrapper.findAll('button')
+
     const loginButton = buttons.find((btn) => btn.text() === 'Login')
     expect(loginButton?.attributes('disabled')).toBeDefined()
 
@@ -30,7 +37,7 @@ describe('LoginForm', () => {
     expect(googleButton?.attributes('disabled')).toBeDefined()
   })
 
-  it('shows error message when passed as prop', () => {
+  it('shows error message when authError prop is passed', () => {
     const errorMessage = 'Invalid credentials'
 
     const wrapper = mount(LoginForm, {
@@ -38,5 +45,29 @@ describe('LoginForm', () => {
     })
 
     expect(wrapper.text()).toContain(errorMessage)
+  })
+
+  it('emits login with valid credentials', async () => {
+    const wrapper = mount(LoginForm)
+
+    const mockedCredentials = { email: 'test@example.com', password: 'Password123' }
+
+    const vm = wrapper.vm as any
+    await vm.onSubmit({
+      valid: true,
+      values: mockedCredentials,
+    })
+
+    const loginEmitted = wrapper.emitted('login')
+    expect(loginEmitted).toBeTruthy()
+    expect(loginEmitted?.[0]).toEqual([{ email: 'test@example.com', password: 'Password123' }])
+  })
+
+  it('emits googleLogin when Google button is clicked', async () => {
+    const wrapper = mount(LoginForm)
+
+    const googleButton = wrapper.find("button[aria-label='Continue with Google']")
+    await googleButton?.trigger('click')
+    expect(wrapper.emitted('googleLogin')).toBeTruthy()
   })
 })

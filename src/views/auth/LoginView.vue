@@ -14,7 +14,7 @@
         v-model:loading="loading"
         v-model:authError="authErrorMessage"
         @login="handleLogin"
-        @google="handleGoogleLogin"
+        @googleLogin="handleGoogleLogin"
       />
 
       <div class="text-center mt-6">
