@@ -12,7 +12,7 @@ export default defineConfig({
     vue(),
     vueDevTools(),
     Components({
-      dirs: ['src/components'],
+      dirs: ['src/components', 'src/layouts'],
       extensions: ['vue'],
       deep: true,
       resolvers: [PrimeVueResolver()],

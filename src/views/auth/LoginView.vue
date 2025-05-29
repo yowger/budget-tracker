@@ -20,7 +20,7 @@
       <div class="text-center mt-6">
         <span class="text-surface-700 dark:text-surface-200">Not registered?</span>
         <router-link
-          to="{ name: 'register' }"
+          v-bind:to="{ name: 'register' }"
           class="text-primary font-medium ml-1 hover:text-primary-emphasis"
         >
           Create an Account

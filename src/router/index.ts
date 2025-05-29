@@ -61,16 +61,14 @@ const router = createRouter({
   ],
 })
 
-router.beforeEach((to, from, next) => {
+router.beforeEach((to, _from, next) => {
   const requiresAuth = to.meta.requiresAuth
-
   if (!requiresAuth) {
     return next()
   }
 
   const userStore = useUserStore()
   const hasUser = userStore.user?.uid
-
   if (hasUser) {
     return next()
   }

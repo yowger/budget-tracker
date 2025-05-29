@@ -9,6 +9,15 @@ export {}
 declare module 'vue' {
   export interface GlobalComponents {
     AppBreadCrumb: typeof import('./src/components/AppBreadCrumb.vue')['default']
+    AppFooter: typeof import('./src/layouts/AppFooter.vue')['default']
+    AppLayout: typeof import('./src/layouts/AppLayout.vue')['default']
+    AppMenu: typeof import('./src/layouts/AppMenu.vue')['default']
+    AppMenuItem: typeof import('./src/layouts/AppMenuItem.vue')['default']
+    AppProfileDropdown: typeof import('./src/layouts/AppProfileDropdown.vue')['default']
+    AppSidebar: typeof import('./src/layouts/AppSidebar.vue')['default']
+    AppTopbar: typeof import('./src/layouts/AppTopbar.vue')['default']
+    Avatar: typeof import('primevue/avatar')['default']
+    Badge: typeof import('primevue/badge')['default']
     Button: typeof import('primevue/button')['default']
     Card: typeof import('primevue/card')['default']
     Checkbox: typeof import('primevue/checkbox')['default']
@@ -16,8 +25,12 @@ declare module 'vue' {
     FormField: typeof import('@primevue/forms/formfield')['default']
     InputText: typeof import('primevue/inputtext')['default']
     LoginForm: typeof import('./src/components/forms/LoginForm.vue')['default']
+    Menubar: typeof import('primevue/menubar')['default']
     Message: typeof import('primevue/message')['default']
     RouterLink: typeof import('vue-router')['RouterLink']
     RouterView: typeof import('vue-router')['RouterView']
+  }
+  export interface ComponentCustomProperties {
+    Ripple: typeof import('primevue/ripple')['default']
   }
 }
