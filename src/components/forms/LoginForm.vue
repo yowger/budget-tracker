@@ -17,8 +17,8 @@
       </div>
 
       <div class="flex flex-col gap-2">
-        <label for="email">Email Address</label>
         <form-field v-slot="$field" name="email" class="flex flex-col gap-1.5">
+          <label for="email">Email Address</label>
           <input-text
             id="email"
             type="email"
@@ -37,8 +37,8 @@
       </div>
 
       <div class="flex flex-col gap-2">
-        <label for="password">Password</label>
         <form-field v-slot="$field" name="password" class="flex flex-col gap-1.5">
+          <label for="password">Password</label>
           <input-text
             id="password"
             type="password"
