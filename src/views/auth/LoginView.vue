@@ -13,7 +13,7 @@
       <login-form
         v-model:loading="loading"
         v-model:authError="authErrorMessage"
-        @login="handleLogin"
+        @submit="handleSubmit"
         @googleLogin="handleGoogleLogin"
       />
 
@@ -31,6 +31,7 @@
 </template>
 
 <script setup lang="ts">
+import { type FormSubmitEvent } from '@primevue/forms'
 import { ref } from 'vue'
 import { useRouter } from 'vue-router'
 
@@ -44,9 +45,12 @@ const userStore = useUserStore()
 const loading = ref(false)
 const authErrorMessage = ref<string | null>(null)
 
-async function handleLogin({ email, password }: { email: string; password: string }) {
+async function handleSubmit(form: FormSubmitEvent) {
+  if (!form.valid) return
+
   loading.value = true
   authErrorMessage.value = null
+  const { email, password } = form.values
 
   try {
     await userStore.emailLogin(email, password)

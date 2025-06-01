@@ -80,7 +80,7 @@ import { z } from 'zod'
 import { zodResolver } from '@primevue/forms/resolvers/zod'
 
 const emit = defineEmits<{
-  (e: 'login', form: { email: string; password: string }): void
+  (e: 'submit', form: FormSubmitEvent): void
   (e: 'googleLogin'): void
 }>()
 
@@ -100,10 +100,7 @@ const initialValues = reactive({
 const resolver = zodResolver(loginSchema)
 
 function onSubmit(form: FormSubmitEvent) {
-  if (form.valid) {
-    const { email, password } = form.values
-    emit('login', { email, password })
-  }
+  emit('submit', form)
 }
 
 function onGoogleLogin() {

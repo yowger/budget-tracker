@@ -47,7 +47,7 @@ describe('LoginForm', () => {
     expect(wrapper.text()).toContain(errorMessage)
   })
 
-  it('emits login with valid credentials', async () => {
+  it('submits the form and emits values when input is valid', async () => {
     const wrapper = mount(LoginForm)
 
     const mockedCredentials = { email: 'test@example.com', password: 'Password123' }
@@ -58,9 +58,19 @@ describe('LoginForm', () => {
       values: mockedCredentials,
     })
 
-    const loginEmitted = wrapper.emitted('login')
-    expect(loginEmitted).toBeTruthy()
-    expect(loginEmitted?.[0]).toEqual([{ email: 'test@example.com', password: 'Password123' }])
+    const submitEmitted = wrapper.emitted('submit')
+    expect(submitEmitted).toBeTruthy()
+    expect(submitEmitted?.[0]).toBeTruthy()
+
+    const emittedPayload = submitEmitted![0][0]
+
+    expect(emittedPayload).toMatchObject({
+      valid: true,
+      values: {
+        email: mockedCredentials.email,
+        password: mockedCredentials.password,
+      },
+    })
   })
 
   it('emits googleLogin when Google button is clicked', async () => {
