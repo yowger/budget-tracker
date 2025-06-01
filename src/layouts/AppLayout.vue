@@ -15,6 +15,8 @@
     >
       <div class="flex-1 pb-8">
         <div class="flex flex-col gap-4">
+          <app-bread-crumb></app-bread-crumb>
+
           <router-view></router-view>
         </div>
       </div>

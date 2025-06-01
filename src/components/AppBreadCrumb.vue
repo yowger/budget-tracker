@@ -1,5 +1,5 @@
 <template>
-  <ul class="list-none p-0 m-0 flex items-center font-medium mb-3">
+  <ul class="list-none p-0 m-0 flex items-center font-medium mb-2">
     <li>
       <router-link
         v-bind:to="home.route"
