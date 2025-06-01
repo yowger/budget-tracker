@@ -16,16 +16,17 @@
       <form-field name="category" v-slot="$field" class="flex flex-col gap-1">
         <label for="category" class="text-sm mb-1">Category</label>
         <Select
+          v-model="selectedCategory"
           id="category"
           :options="filteredCategories"
           size="small"
           option-label="name"
-          option-value="value"
           placeholder="Select category"
         >
           <template #value="slotProps">
             <div v-if="slotProps.value" class="flex items-center gap-2">
-              <span>{{ slotProps.value }}</span>
+              <i :class="slotProps.value.icon" class="text-sm text-gray-600"></i>
+              <span>{{ slotProps.value.name }}</span>
             </div>
             <span v-else> {{ slotProps.placeholder }}</span>
           </template>
@@ -110,10 +111,10 @@
 </template>
 
 <script setup lang="ts">
-import { ref, reactive, computed } from 'vue'
-import { z } from 'zod'
 import { Form, type FormSubmitEvent } from '@primevue/forms'
 import { zodResolver } from '@primevue/forms/resolvers/zod'
+import { ref, reactive, computed } from 'vue'
+import { z } from 'zod'
 
 const allCategories = [
   { name: 'Food & Drink', value: 'food', type: 'expense', icon: 'pi pi-shop' },
@@ -136,9 +137,19 @@ const emit = defineEmits<{
   (e: 'submit', form: FormSubmitEvent): void
 }>()
 
+const categorySchema = z.union([
+  z.string().min(1, 'Category is required'),
+  z.object({
+    name: z.string().min(1, 'Category is required'),
+    value: z.string(),
+    type: z.string(),
+    icon: z.string(),
+  }),
+])
+
 const transactionSchema = z.object({
   amount: z.coerce.number().gt(0, { message: 'Amount must be a positive number' }),
-  category: z.string().min(1, 'Category is required'),
+  category: categorySchema,
   date: z.date({ required_error: 'Date is required' }),
   note: z.string().optional(),
 })
@@ -154,6 +165,8 @@ const initialValues = reactive<TransactionFormData>({
   note: '',
 })
 
+const selectedCategory = ref(null)
+
 const tabs = ['expense', 'income'] as const
 const selectedType = ref<'income' | 'expense'>('expense')
 function selectType(type: 'income' | 'expense') {
@@ -165,6 +178,7 @@ const filteredCategories = computed(() =>
 )
 
 function onSubmit(form: FormSubmitEvent) {
+  console.log('🚀 ~ onSubmit ~ form:', form)
   emit('submit', form)
 }
 
