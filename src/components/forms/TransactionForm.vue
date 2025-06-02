@@ -16,7 +16,6 @@
       <form-field name="category" v-slot="$field" class="flex flex-col gap-1">
         <label for="category" class="text-sm mb-1">Category</label>
         <Select
-          v-model="selectedCategory"
           id="category"
           :options="filteredCategories"
           size="small"
@@ -87,25 +86,44 @@
         >
       </form-field>
 
-      <form-field name="amount" v-slot="$field" class="flex flex-col gap-1">
-        <label for="amount" class="text-sm mb-1">Amount</label>
-        <input-text id="amount" type="number" placeholder="0.00" size="small" />
-        <Message
-          v-if="$field?.invalid"
-          severity="error"
-          size="small"
-          variant="simple"
-          class="px-3"
-          >{{ $field.error?.message }}</Message
-        >
-      </form-field>
+      <div class="flex gap-3">
+        <form-field name="amount" v-slot="$field" class="flex-1 flex flex-col gap-1">
+          <label for="amount" class="text-sm mb-1">Amount</label>
+          <input-text id="amount" type="number" placeholder="0.00" size="small" class="w-full" />
+          <Message
+            v-if="$field?.invalid"
+            severity="error"
+            size="small"
+            variant="simple"
+            class="px-3"
+          >
+            {{ $field.error?.message }}
+          </Message>
+        </form-field>
+
+        <form-field name="currency" v-slot="$field">
+          <div class="flex flex-col gap-1 w-[120px]">
+            <label for="currency" class="text-sm mb-1">Currency</label>
+            <Select
+              id="currency"
+              :options="currencies"
+              optionLabel="name"
+              optionValue="value"
+              placeholder="Currency"
+              size="small"
+              class="w-full"
+              fluid
+            ></Select>
+          </div>
+        </form-field>
+      </div>
 
       <div class="flex items-center gap-2">
         <Checkbox inputId="size_small" name="size" value="Small" size="small" />
         <label for="size_small" class="text-sm">Keep open to add more transactions</label>
       </div>
 
-      <Button type="submit" label="Save Transaction" class="mt-4 w-full" />
+      <Button type="submit" label="Save Transaction" class="mt-4 w-full"></Button>
     </div>
   </Form>
 </template>
@@ -133,6 +151,14 @@ const allCategories = [
   { name: 'Other (Income)', value: 'other_income', type: 'income', icon: 'pi pi-ellipsis-h' },
 ]
 
+const currencies = [
+  { name: 'USD', value: 'USD' },
+  { name: 'PHP', value: 'PHP' },
+  { name: 'AUD', value: 'AUD' },
+  { name: 'EUR', value: 'EUR' },
+  { name: 'GBP', value: 'GBP' },
+]
+
 const emit = defineEmits<{
   (e: 'submit', form: FormSubmitEvent): void
 }>()
@@ -149,6 +175,7 @@ const categorySchema = z.union([
 
 const transactionSchema = z.object({
   amount: z.coerce.number().gt(0, { message: 'Amount must be a positive number' }),
+  currency: z.string().min(1, 'Currency is required'),
   category: categorySchema,
   date: z.date({ required_error: 'Date is required' }),
   note: z.string().optional(),
@@ -160,12 +187,11 @@ const resolver = zodResolver(transactionSchema)
 
 const initialValues = reactive<TransactionFormData>({
   amount: 0,
+  currency: 'USD',
   category: '',
   date: new Date(),
   note: '',
 })
-
-const selectedCategory = ref(null)
 
 const tabs = ['expense', 'income'] as const
 const selectedType = ref<'income' | 'expense'>('expense')
@@ -178,7 +204,6 @@ const filteredCategories = computed(() =>
 )
 
 function onSubmit(form: FormSubmitEvent) {
-  console.log('🚀 ~ onSubmit ~ form:', form)
   emit('submit', form)
 }
 
