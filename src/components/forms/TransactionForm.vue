@@ -1,5 +1,5 @@
 <template>
-  <Form :initialValues="initialValues" :resolver @submit="onSubmit">
+  <Form v-slot="$form" :initialValues="initialValues" :resolver @submit="onSubmit">
     <div class="flex flex-col gap-4">
       <div class="flex gap-2">
         <Button
@@ -8,7 +8,7 @@
           :label="capitalize(tab)"
           :outlined="selectedType !== tab"
           :severity="selectedType === tab ? 'primary' : undefined"
-          @click="() => selectType(tab)"
+          @click="() => selectType(tab, $form)"
           size="small"
         ></Button>
       </div>
@@ -129,7 +129,7 @@
 </template>
 
 <script setup lang="ts">
-import { Form, type FormSubmitEvent } from '@primevue/forms'
+import { type FormSubmitEvent } from '@primevue/forms'
 import { zodResolver } from '@primevue/forms/resolvers/zod'
 import { ref, reactive, computed } from 'vue'
 import { z } from 'zod'
@@ -195,8 +195,10 @@ const initialValues = reactive<TransactionFormData>({
 
 const tabs = ['expense', 'income'] as const
 const selectedType = ref<'income' | 'expense'>('expense')
-function selectType(type: 'income' | 'expense') {
+function selectType(type: 'income' | 'expense', form: any) {
   selectedType.value = type
+
+  form.category.value = ''
 }
 
 const filteredCategories = computed(() =>
