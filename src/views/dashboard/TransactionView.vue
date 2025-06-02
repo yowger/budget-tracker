@@ -23,7 +23,7 @@
     v-bind:closable="true"
     @hide="handleCloseTransactDialog"
     class="w-11/12 md:w-1/2"
-    >
+  >
     <!-- <template #header>
       <div class="inline-flex items-center justify-center gap-2">
         <Avatar
@@ -46,11 +46,12 @@
       <Button label="Cancel" text severity="secondary" @click="visible = false" autofocus />
       <Button label="Save" outlined severity="secondary" @click="visible = false" autofocus />
     </template> -->
-    <transaction-form></transaction-form>
+    <transaction-form @submit="handleAddTransaction"></transaction-form>
   </Dialog>
 </template>
 
 <script setup lang="ts">
+import type { FormSubmitEvent } from '@primevue/forms'
 import { ref } from 'vue'
 
 let showTransactDialog = ref(false)
@@ -60,5 +61,11 @@ function showAddTransaction() {
 
 function handleCloseTransactDialog() {
   showTransactDialog.value = false
+}
+
+function handleAddTransaction(form: FormSubmitEvent) {
+  if(form.valid) {
+    console.log("save transaction")
+  }
 }
 </script>
