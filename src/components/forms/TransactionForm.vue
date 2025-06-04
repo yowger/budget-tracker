@@ -8,15 +8,16 @@
           :label="capitalize(tab)"
           :outlined="selectedType !== tab"
           :severity="selectedType === tab ? 'primary' : undefined"
-          @click="() => selectType(tab, $form)"
+          @click="() => selectType(tab)"
           size="small"
         ></Button>
       </div>
 
-      <form-field name="category" v-slot="$field" class="flex flex-col gap-1">
+      <div class="flex flex-col gap-1">
         <label for="category" class="text-sm mb-1">Category</label>
         <Select
           id="category"
+          name="category"
           :options="filteredCategories"
           size="small"
           option-label="name"
@@ -24,10 +25,10 @@
         >
           <template #value="slotProps">
             <div v-if="slotProps.value" class="flex items-center gap-2">
-              <i :class="slotProps.value.icon" class="text-sm text-gray-600"></i>
+              <i :class="slotProps.value.icon" class="text-sm text-gray-600" />
               <span>{{ slotProps.value.name }}</span>
             </div>
-            <span v-else> {{ slotProps.placeholder }}</span>
+            <span v-else>{{ slotProps.placeholder }}</span>
           </template>
 
           <template #option="slotProps">
@@ -51,71 +52,97 @@
           </template>
         </Select>
         <Message
-          v-if="$field?.invalid"
+          v-if="$form.category?.invalid"
           severity="error"
           size="small"
           variant="simple"
           class="px-3"
-          >{{ $field.error?.message }}</Message
         >
-      </form-field>
+          {{ $form.category.error?.message }}
+        </Message>
+      </div>
 
-      <form-field name="date" v-slot="$field" class="flex flex-col gap-1">
+      <div class="flex flex-col gap-1">
         <label for="date" class="text-sm mb-1">Date</label>
-        <date-picker id="date" showIcon fluid size="small" iconDisplay="input" showButtonBar />
+        <date-picker
+          id="date"
+          name="date"
+          showIcon
+          fluid
+          size="small"
+          iconDisplay="input"
+          showButtonBar
+        />
         <Message
-          v-if="$field?.invalid"
+          v-if="$form.date?.invalid"
           severity="error"
           size="small"
           variant="simple"
           class="px-3"
-          >{{ $field.error?.message }}</Message
         >
-      </form-field>
+          {{ $form.date.error?.message }}
+        </Message>
+      </div>
 
-      <form-field name="note" v-slot="$field" class="flex flex-col gap-1">
+      <div class="flex flex-col gap-1">
         <label for="note" class="text-sm mb-1">Note (optional)</label>
-        <input-text id="note" placeholder="Write note" size="small" />
+        <input-text id="note" name="note" placeholder="Write note" size="small" />
         <Message
-          v-if="$field?.invalid"
+          v-if="$form.note?.invalid"
           severity="error"
           size="small"
           variant="simple"
           class="px-3"
-          >{{ $field.error?.message }}</Message
         >
-      </form-field>
+          {{ $form.note.error?.message }}
+        </Message>
+      </div>
 
       <div class="flex gap-3">
-        <form-field name="amount" v-slot="$field" class="flex-1 flex flex-col gap-1">
+        <div class="flex-1 flex flex-col gap-1">
           <label for="amount" class="text-sm mb-1">Amount</label>
-          <input-text id="amount" type="number" placeholder="0.00" size="small" class="w-full" />
+          <input-text
+            id="amount"
+            name="amount"
+            type="number"
+            placeholder="0.00"
+            size="small"
+            class="w-full"
+          />
           <Message
-            v-if="$field?.invalid"
+            v-if="$form.amount?.invalid"
             severity="error"
             size="small"
             variant="simple"
             class="px-3"
           >
-            {{ $field.error?.message }}
+            {{ $form.amount.error?.message }}
           </Message>
-        </form-field>
+        </div>
 
-        <form-field name="currency" v-slot="$field">
-          <div class="flex flex-col gap-1 w-[120px]">
-            <label for="currency" class="text-sm mb-1">Currency</label>
-            <Select
-              id="currency"
-              :options="currencies"
-              optionLabel="name"
-              optionValue="value"
-              placeholder="Currency"
-              size="small"
-              class="w-full"
-              fluid
-            ></Select>
-          </div>
-        </form-field>
+        <div class="flex flex-col gap-1 w-[120px]">
+          <label for="currency" class="text-sm mb-1">Currency</label>
+          <Select
+            id="currency"
+            name="currency"
+            :options="currencies"
+            optionLabel="name"
+            optionValue="value"
+            placeholder="Currency"
+            size="small"
+            class="w-full"
+            fluid
+          ></Select>
+          <Message
+            v-if="$form.currency?.invalid"
+            severity="error"
+            size="small"
+            variant="simple"
+            class="px-3"
+          >
+            {{ $form.currency.error?.message }}
+          </Message>
+        </div>
       </div>
 
       <div class="flex items-center gap-2">
@@ -129,10 +156,13 @@
 </template>
 
 <script setup lang="ts">
-import { type FormSubmitEvent } from '@primevue/forms'
+import { type FormInstance, type FormSubmitEvent } from '@primevue/forms'
 import { zodResolver } from '@primevue/forms/resolvers/zod'
+import { templateRef } from '@vueuse/core'
 import { ref, reactive, computed } from 'vue'
 import { z } from 'zod'
+
+const form = templateRef<FormInstance>('form')
 
 const allCategories = [
   { name: 'Food & Drink', value: 'food', type: 'expense', icon: 'pi pi-shop' },
@@ -195,10 +225,9 @@ const initialValues = reactive<TransactionFormData>({
 
 const tabs = ['expense', 'income'] as const
 const selectedType = ref<'income' | 'expense'>('expense')
-function selectType(type: 'income' | 'expense', form: any) {
+function selectType(type: 'income' | 'expense') {
   selectedType.value = type
-
-  form.category.value = ''
+  form.value.setValues({ type })
 }
 
 const filteredCategories = computed(() =>
