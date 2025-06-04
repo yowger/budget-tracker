@@ -19,7 +19,10 @@
           variant="outlined"
           severity="secondary"
           size="small"
-          class="flex items-center justify-between gap-2 h-full focus:border-[#94a3b8]"
+          :class="[
+            'flex items-center justify-between gap-2 h-full',
+            $form.icon?.invalid ? 'border-red-500' : 'focus:border-[#94a3b8]',
+          ]"
         >
           <div
             class="relative w-5 h-5 rounded-full flex items-center justify-center"
@@ -27,9 +30,9 @@
           >
             <i :class="selectedIcon" class="text-xs text-white" v-if="selectedIcon"></i>
           </div>
-
           <i class="pi pi-chevron-down text-xs text-[#94a3b8]"></i>
         </Button>
+
         <Popover ref="iconPopover">
           <div class="grid grid-cols-4 gap-4 p-2">
             <div
@@ -53,7 +56,10 @@
           variant="outlined"
           severity="secondary"
           size="small"
-          class="flex items-center justify-between gap-2 h-full focus:border-[#94a3b8]"
+          :class="[
+            'flex items-center justify-between gap-2 h-full',
+            $form.color?.invalid ? 'border-red-500' : 'focus:border-[#94a3b8]',
+          ]"
         >
           <div
             class="relative w-4 h-4 rounded-full flex items-center justify-center"
@@ -61,9 +67,9 @@
           >
             <div class="w-1 h-1 bg-white rounded-full"></div>
           </div>
-
           <i class="pi pi-chevron-down text-xs text-[#94a3b8]"></i>
         </Button>
+
         <Popover ref="colorPopover">
           <div class="grid grid-cols-3 gap-4 p-2">
             <div
@@ -131,7 +137,7 @@ const type = ref([
 
 const initialValues = ref({
   name: '',
-  type: { name: 'Expense' },
+  type: { name: '' },
   icon: '',
   color: '',
 })
