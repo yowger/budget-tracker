@@ -1,6 +1,8 @@
 <template>
   <Card>
     <template #content>
+      <category-form></category-form>
+
       <div class="space-y-8">
         <category-section title="Income Categories" :categories="incomeCategories" />
         <category-section title="Expense Categories" :categories="expenseCategories" />

@@ -21,6 +21,7 @@ declare module 'vue' {
     Button: typeof import('primevue/button')['default']
     Calendar: typeof import('primevue/calendar')['default']
     Card: typeof import('primevue/card')['default']
+    CategoryForm: typeof import('./src/components/forms/CategoryForm.vue')['default']
     CategoryListItem: typeof import('./src/components/category/CategoryListItem.vue')['default']
     CategorySection: typeof import('./src/components/category/CategorySection.vue')['default']
     CategorySelect: typeof import('./src/components/forms/CategorySelect.vue')['default']
@@ -37,8 +38,10 @@ declare module 'vue' {
     LoginForm: typeof import('./src/components/forms/LoginForm.vue')['default']
     Menubar: typeof import('primevue/menubar')['default']
     Message: typeof import('primevue/message')['default']
+    Popover: typeof import('primevue/popover')['default']
     RouterLink: typeof import('vue-router')['RouterLink']
     RouterView: typeof import('vue-router')['RouterView']
+    RowSelect: typeof import('./src/components/base/RowSelect.vue')['default']
     Select: typeof import('primevue/select')['default']
     TransactionForm: typeof import('./src/components/forms/TransactionForm.vue')['default']
   }
