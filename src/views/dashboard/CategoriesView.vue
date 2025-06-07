@@ -1,7 +1,7 @@
 <template>
   <Card>
     <template #content>
-      <category-form></category-form>
+      <category-form @submit="handleSubmit"></category-form>
 
       <div class="space-y-8">
         <category-section title="Income Categories" :categories="incomeCategories" />
@@ -12,6 +12,8 @@
 </template>
 
 <script setup lang="ts">
+import type { CategoryFormSubmitEvent } from '@/components/forms/CategoryForm.vue'
+
 const incomeCategories = [
   {
     name: 'Loan',
@@ -80,4 +82,8 @@ const expenseCategories = [
     transactions: 0,
   },
 ]
+
+function handleSubmit(payload: CategoryFormSubmitEvent) {
+
+}
 </script>

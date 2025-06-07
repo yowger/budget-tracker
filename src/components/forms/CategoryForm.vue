@@ -95,9 +95,9 @@
       </div>
 
       <div class="flex flex-col gap-1">
-        <label for="type.name" class="text-sm mb-1">Type</label>
+        <label for="type" class="text-sm mb-1">Type</label>
         <Select
-          name="type.name"
+          name="type"
           :options="type"
           optionLabel="name"
           placeholder="Select a type"
@@ -117,6 +117,7 @@
     </div>
   </Form>
 </template>
+
 <script setup lang="ts">
 import { Form, type FormInstance, type FormSubmitEvent } from '@primevue/forms'
 import { zodResolver } from '@primevue/forms/resolvers/zod'
@@ -126,8 +127,10 @@ import { z } from 'zod'
 
 const form = templateRef<FormInstance>('form')
 
+export type CategoryFormSubmitEvent = FormSubmitEvent<z.infer<typeof categorySchema>>
+
 const emit = defineEmits<{
-  (e: 'submit', payload: FormSubmitEvent): void
+  (e: 'submit', payload: CategoryFormSubmitEvent): void
 }>()
 
 const type = ref([
@@ -137,7 +140,7 @@ const type = ref([
 
 const initialValues = ref({
   name: '',
-  type: { name: '' },
+  type: { name: 'Expense', value: 'expense' },
   icon: '',
   color: '',
 })
@@ -148,9 +151,10 @@ const categorySchema = z.object({
   name: z.string().min(1, 'Name is required'),
   type: z.union([
     z.object({
-      name: z.string().min(1, 'Type is required.'),
+      name: z.string().min(1, 'Type is required 1.'),
+      value: z.string().min(1, 'Type is required 1.'),
     }),
-    z.any().refine(() => false, { message: 'Type is required.' }),
+    z.any().refine(() => false, { message: 'Type is required 2.' }),
   ]),
 })
 
@@ -203,6 +207,6 @@ const selectIcon = (icon: string) => {
 }
 
 function onSubmit(payload: FormSubmitEvent) {
-  console.log('🚀 ~ onSubmit ~ payload:', payload)
+  emit('submit', payload as CategoryFormSubmitEvent)
 }
 </script>
