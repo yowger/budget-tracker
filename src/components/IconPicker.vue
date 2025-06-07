@@ -14,13 +14,16 @@
         invalid ? 'border-red-500' : 'focus:border-[#94a3b8]',
       ]"
     >
-      <div
-        class="relative w-5 h-5 rounded-full flex items-center justify-center"
-        :style="{ backgroundColor: color }"
-      >
-        <i :class="modelValue" class="text-xs text-white" v-if="modelValue"></i>
-      </div>
-      <i class="pi pi-chevron-down text-xs text-[#94a3b8]"></i>
+      <i v-if="loading" class="pi pi-spinner animate-spin"></i>
+      <template v-else>
+        <div
+          class="relative w-5 h-5 rounded-full flex items-center justify-center"
+          :style="{ backgroundColor: modelValue ? modelValue : '#E5E7EB' }"
+        >
+          <i :class="modelValue" class="text-xs text-white" v-if="modelValue"></i>
+        </div>
+        <i class="pi pi-chevron-down text-xs text-[#94a3b8]"></i>
+      </template>
     </Button>
 
     <pop-over ref="popoverRef">
@@ -47,6 +50,7 @@ defineProps<{
   color?: string
   disabled?: boolean
   invalid?: boolean
+  loading?: boolean
   name?: string
 }>()
 

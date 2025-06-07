@@ -18,7 +18,7 @@
       <template v-else>
         <div
           class="relative w-4 h-4 rounded-full flex items-center justify-center"
-          :style="{ backgroundColor: modelValue }"
+          :style="{ backgroundColor: modelValue ? modelValue : '#E5E7EB' }"
         >
           <div class="w-1 h-1 bg-white rounded-full"></div>
         </div>
