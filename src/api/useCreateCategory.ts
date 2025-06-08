@@ -8,9 +8,7 @@ export interface CreateCategory {
   name: string
   icon: string
   color: string
-  type: {
-    name: string
-  }
+  type: 'expense' | 'income'
 }
 
 async function addCategory(category: CreateCategory) {

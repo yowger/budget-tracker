@@ -11,6 +11,9 @@ export type Color = {
 
 async function getColors(): Promise<Color[]> {
   const querySnapshot = await getDocs(collection(db, 'colors'))
+
+  if (querySnapshot.empty) return []
+
   return querySnapshot.docs.map((doc) => ({
     id: doc.id,
     ...(doc.data() as Omit<Color, 'id'>),

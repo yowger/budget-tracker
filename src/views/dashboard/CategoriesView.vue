@@ -12,6 +12,7 @@
 </template>
 
 <script setup lang="ts">
+import { useCreateCategory, type CreateCategory } from '@/api/useCreateCategory'
 import type { CategoryFormSubmitEvent } from '@/components/forms/CategoryForm.vue'
 
 const incomeCategories = [
@@ -83,7 +84,28 @@ const expenseCategories = [
   },
 ]
 
-function handleSubmit(payload: CategoryFormSubmitEvent) {
+const { mutate, error } = useCreateCategory()
 
+function handleSubmit(payload: CategoryFormSubmitEvent) {
+  console.log('🚀 ~ handleSubmit ~ payload:', payload)
+  if (!payload.valid) {
+    return
+  }
+
+  const newCategory: CreateCategory = {
+    name: payload.values.name,
+    icon: payload.values.icon,
+    color: payload.values.color,
+    type: payload.values.type.value,
+  }
+
+  mutate(newCategory, {
+    onSuccess: () => {
+      console.log('Category created!')
+    },
+    onError: (error) => {
+      console.log('🚀 ~ handleSubmit ~ error:', error)
+    },
+  })
 }
 </script>
