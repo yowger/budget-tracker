@@ -54,6 +54,8 @@
 import type { FormSubmitEvent } from '@primevue/forms'
 import { ref } from 'vue'
 
+import TransactionForm from '@/features/transactions/components/TransactionForm.vue'
+
 let showTransactDialog = ref(false)
 function showAddTransaction() {
   showTransactDialog.value = true
@@ -64,8 +66,8 @@ function handleCloseTransactDialog() {
 }
 
 function handleAddTransaction(form: FormSubmitEvent) {
-  if(form.valid) {
-    console.log("save transaction")
+  if (form.valid) {
+    console.log('save transaction')
   }
 }
 </script>

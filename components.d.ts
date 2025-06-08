@@ -27,7 +27,7 @@ declare module 'vue' {
     CategorySelect: typeof import('./src/components/forms/CategorySelect.vue')['default']
     Checkbox: typeof import('primevue/checkbox')['default']
     CheckBox: typeof import('primevue/checkbox')['default']
-    ColorPicker: typeof import('./src/components/ColorPicker.vue')['default']
+    ColorPicker: typeof import('primevue/colorpicker')['default']
     DatePicker: typeof import('primevue/datepicker')['default']
     Dialog: typeof import('primevue/dialog')['default']
     Dropdown: typeof import('primevue/dropdown')['default']

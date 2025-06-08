@@ -1,7 +1,7 @@
 import { mount } from '@vue/test-utils'
 import { describe, it, expect } from 'vitest'
 
-import LoginForm from '@/components/forms/LoginForm.vue'
+import LoginForm from '@/features/auth/components/LoginForm.vue'
 
 describe('LoginForm', () => {
   it('renders email and password inputs', () => {

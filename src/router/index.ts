@@ -21,7 +21,7 @@ const router = createRouter({
         {
           path: 'overview',
           name: 'overview',
-          component: () => import('@/views/dashboard/OverviewView.vue'),
+          component: () => import('@/features/overview/views/OverviewView.vue'),
           meta: {
             breadcrumb: [{ label: 'Overview' }],
           },
@@ -29,7 +29,7 @@ const router = createRouter({
         {
           path: 'transactions',
           name: 'transactions',
-          component: () => import('@/views/dashboard/TransactionView.vue'),
+          component: () => import('@/features/transactions/views/TransactionView.vue'),
           meta: {
             breadcrumb: [{ label: 'Transactions' }],
           },
@@ -37,7 +37,7 @@ const router = createRouter({
         {
           path: 'categories',
           name: 'categories',
-          component: () => import('@/views/dashboard/CategoriesView.vue'),
+          component: () => import('@/features/category/views/CategoriesView.vue'),
           meta: {
             breadcrumb: [{ label: 'Categories' }],
           },
@@ -52,12 +52,12 @@ const router = createRouter({
     {
       path: '/login',
       name: 'login',
-      component: () => import('@/views/auth/LoginView.vue'),
+      component: () => import('@/features/auth/views/LoginView.vue'),
     },
     {
       path: '/register',
       name: 'register',
-      component: () => import('@/views/auth/RegisterView.vue'),
+      component: () => import('@/features/auth/views/RegisterView.vue'),
     },
     {
       path: '/landing',

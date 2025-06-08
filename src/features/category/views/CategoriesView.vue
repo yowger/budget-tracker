@@ -9,11 +9,14 @@
       </div>
     </template>
   </Card>
+  a
 </template>
 
 <script setup lang="ts">
-import { useCreateCategory, type CreateCategory } from '@/api/useCreateCategory'
-import type { CategoryFormSubmitEvent } from '@/components/forms/CategoryForm.vue'
+import { useCreateCategory, type CreateCategory } from '@/features/category/api/useCreateCategory'
+import type { CategoryFormSubmitEvent } from '@/features/category/components/CategoryForm.vue'
+import CategoryForm from '@/features/category/components/CategoryForm.vue'
+import CategorySection from '@/features/category/components/CategorySection.vue'
 
 const incomeCategories = [
   {

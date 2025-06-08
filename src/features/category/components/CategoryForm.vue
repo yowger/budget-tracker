@@ -61,7 +61,9 @@ import { templateRef } from '@vueuse/core'
 import { ref, watch } from 'vue'
 import { z } from 'zod'
 
-import { useGetColors } from '@/api/useGetColors'
+import IconPicker from '@/features/category/components/IconPicker.vue'
+import ColorPicker from '@/features/category/components/ColorPicker.vue'
+import { useGetColors } from '@/features/category/api/useGetColors'
 
 const categorySchema = z.object({
   icon: z.string().min(1, 'Icon is required'),
@@ -95,7 +97,7 @@ const initialValues = ref({
 })
 
 const selectedColor = ref(initialValues.value.color)
-const selectedIcon = ref<string | null>(initialValues.value.icon)
+const selectedIcon = ref<string>(initialValues.value.icon)
 
 const type = ref([
   { name: 'Expense', value: 'expense' },

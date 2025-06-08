@@ -36,7 +36,7 @@ import { ref } from 'vue'
 import { useRouter } from 'vue-router'
 
 import useUserStore from '@/stores/user'
-import LoginForm from '@/components/forms/LoginForm.vue'
+import LoginForm from '@/features/auth/components/LoginForm.vue'
 import { FirebaseError } from 'firebase/app'
 
 const router = useRouter()

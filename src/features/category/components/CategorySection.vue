@@ -13,12 +13,16 @@
 </template>
 
 <script setup lang="ts">
+import CategoryListItem from '@/features/category/components/CategoryListItem.vue'
+
 defineProps<{
   title: string
   categories: {
     name: string
     value: string
     icon: string
+    color: string
+    transactions: number
   }[]
 }>()
 </script>
