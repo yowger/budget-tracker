@@ -2,6 +2,7 @@ import { collection, getDocs } from 'firebase/firestore'
 
 import { db } from '@/includes/firebase'
 import { useQuery } from '@tanstack/vue-query'
+import { QUERY_KEYS } from '@/features/category/api/queryKeys'
 
 export type Color = {
   id: string
@@ -22,7 +23,8 @@ async function getColors(): Promise<Color[]> {
 
 export function useGetColors() {
   return useQuery({
-    queryKey: ['colors'],
+    queryKey: QUERY_KEYS.colors,
     queryFn: getColors,
+    staleTime: 1000 * 60 * 60 * 24,
   })
 }

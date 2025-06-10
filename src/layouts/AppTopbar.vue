@@ -35,7 +35,9 @@ const layout = useLayoutStore()
 const userStore = useUserStore()
 
 function handleDropdownSelect(value: string) {
-  console.log('🚀 ~ handleDropdownSelect ~ value:', value)
+  if (value === 'signout') {
+    userStore.signOut()
+  }
 }
 
 const profileMenuIsVisible = ref(false)
@@ -47,8 +49,4 @@ const profileRef = useTemplateRef<HTMLElement | null>('profile-ref')
 onClickOutside(profileRef, () => {
   profileMenuIsVisible.value = false
 })
-
-function handleSignOut() {
-  userStore.signOut()
-}
 </script>

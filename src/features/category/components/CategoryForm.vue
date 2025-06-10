@@ -112,6 +112,7 @@ const iconOptions = [
   { label: 'Apple', value: 'pi pi-apple' },
   { label: 'Star', value: 'pi pi-star' },
   { label: 'Car', value: 'pi pi-car' },
+  
   { label: 'Credit Card', value: 'pi pi-credit-card' },
   { label: 'Briefcase', value: 'pi pi-briefcase' },
   { label: 'Plus', value: 'pi pi-plus' },
