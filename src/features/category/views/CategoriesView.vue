@@ -1,9 +1,8 @@
 <template>
   <Card>
     <template #content>
-      <category-form @submit="handleSubmit"></category-form>
-
       <div class="space-y-8">
+        <category-form @submit="handleSubmit" :is-submitting="categoryPending"></category-form>
         <category-section title="Income Categories" :categories="incomeCategories" />
         <category-section title="Expense Categories" :categories="expenseCategories" />
       </div>
@@ -13,93 +12,37 @@
 </template>
 
 <script setup lang="ts">
+import { computed } from 'vue'
+
 import { useCreateCategory, type CreateCategory } from '@/features/category/api/useCreateCategory'
 import type { CategoryFormSubmitEvent } from '@/features/category/components/CategoryForm.vue'
 import CategoryForm from '@/features/category/components/CategoryForm.vue'
 import CategorySection from '@/features/category/components/CategorySection.vue'
 
-const incomeCategories = [
-  {
-    name: 'Loan',
-    value: 'loan',
-    icon: 'pi pi-home',
-    color: 'bg-green-500',
-    transactions: 1,
-  },
-  {
-    name: 'Salary',
-    value: 'salary',
-    icon: 'pi pi-wallet',
-    color: 'bg-emerald-600',
-    transactions: 4,
-  },
-  {
-    name: 'Business',
-    value: 'business',
-    icon: 'pi pi-briefcase',
-    color: 'bg-blue-500',
-    transactions: 2,
-  },
-  {
-    name: 'Gifts',
-    value: 'gifts_income',
-    icon: 'pi pi-gift',
-    color: 'bg-pink-400',
-    transactions: 0,
-  },
-]
+import { useGetCategories } from '@/features/category/api/useGetCategories'
 
-const expenseCategories = [
-  {
-    name: 'Shopping',
-    value: 'shopping',
-    icon: 'pi pi-shopping-bag',
-    color: 'bg-pink-500',
-    transactions: 3,
-  },
-  {
-    name: 'Food & Drink',
-    value: 'food',
-    icon: 'pi pi-apple',
-    color: 'bg-yellow-500',
-    transactions: 7,
-  },
-  {
-    name: 'Transport',
-    value: 'transport',
-    icon: 'pi pi-car',
-    color: 'bg-indigo-500',
-    transactions: 2,
-  },
-  {
-    name: 'Home',
-    value: 'home',
-    icon: 'pi pi-home',
-    color: 'bg-orange-500',
-    transactions: 1,
-  },
-  {
-    name: 'Entertainment',
-    value: 'entertainment',
-    icon: 'pi pi-star',
-    color: 'bg-purple-500',
-    transactions: 0,
-  },
-]
+const { data: categories } = useGetCategories()
 
-const { mutate, error } = useCreateCategory()
+const incomeCategories = computed(() =>
+  (categories.value ?? []).filter((category) => category.type === 'income'),
+)
 
-function handleSubmit(payload: CategoryFormSubmitEvent) {
-  console.log('🚀 ~ handleSubmit ~ payload:', payload)
-  if (!payload.valid) {
+const expenseCategories = computed(() =>
+  (categories.value ?? []).filter((category) => category.type === 'expense'),
+)
+
+const { mutate, isPending: categoryPending } = useCreateCategory()
+
+function handleSubmit(form: CategoryFormSubmitEvent) {
+  if (!form.valid) {
     return
   }
 
   const newCategory: CreateCategory = {
-    name: payload.values.name,
-    icon: payload.values.icon,
-    color: payload.values.color,
-    type: payload.values.type.value,
+    name: form.values.name,
+    icon: form.values.icon.label,
+    color: form.values.color,
+    type: form.values.type.value,
   }
 
   mutate(newCategory, {

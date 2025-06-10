@@ -3,11 +3,7 @@
     <h3 class="text-lg font-semibold mb-3">{{ title }}</h3>
 
     <ul class="space-y-3">
-      <category-list-item
-        v-for="category in categories"
-        :key="category.value"
-        :category="category"
-      />
+      <category-list-item v-for="category in categories" :key="category.id" :category="category" />
     </ul>
   </section>
 </template>
@@ -18,8 +14,8 @@ import CategoryListItem from '@/features/category/components/CategoryListItem.vu
 defineProps<{
   title: string
   categories: {
+    id: string
     name: string
-    value: string
     icon: string
     color: string
     transactions: number

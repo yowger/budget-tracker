@@ -3,7 +3,7 @@
     <label :for="name" class="text-sm mb-1">Icon</label>
     <Button
       type="button"
-      :label="modelValue || 'Select icon'"
+      :label="modelValue.value || 'Select icon'"
       @click="togglePopover"
       variant="outlined"
       severity="secondary"
@@ -18,9 +18,9 @@
       <template v-else>
         <div
           class="relative w-5 h-5 rounded-full flex items-center justify-center"
-          :style="{ backgroundColor: modelValue ? modelValue : '#E5E7EB' }"
+          :style="{ backgroundColor: color ? color : '#E5E7EB' }"
         >
-          <i :class="modelValue" class="text-xs text-white" v-if="modelValue"></i>
+          <i :class="modelValue.value" class="text-xs text-white" v-if="modelValue"></i>
         </div>
         <i class="pi pi-chevron-down text-xs text-[#94a3b8]"></i>
       </template>
@@ -32,7 +32,7 @@
           v-for="icon in icons"
           :key="icon.value"
           class="flex items-center justify-center p-2 rounded cursor-pointer hover:bg-gray-100"
-          @click="selectIcon(icon.value)"
+          @click="selectIcon(icon)"
         >
           <i :class="icon.value" class="text-xl"></i>
         </div>
@@ -45,7 +45,7 @@
 import { ref } from 'vue'
 
 defineProps<{
-  modelValue: string
+  modelValue: { label: string; value: string }
   icons: { label: string; value: string }[]
   color?: string
   disabled?: boolean
@@ -54,7 +54,9 @@ defineProps<{
   name?: string
 }>()
 
-const emit = defineEmits(['update:modelValue'])
+const emit = defineEmits<{
+  (e: 'update:modelValue', value: { label: string; value: string }): void
+}>()
 
 const popoverRef = ref()
 
@@ -62,8 +64,9 @@ function togglePopover(event: Event) {
   popoverRef.value?.toggle(event)
 }
 
-function selectIcon(icon: string) {
+function selectIcon(icon: { label: string; value: string }) {
   emit('update:modelValue', icon)
+
   popoverRef.value?.hide()
 }
 </script>
