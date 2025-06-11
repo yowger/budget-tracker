@@ -8,7 +8,12 @@
         :key="category.id"
         class="transition hover:bg-gray-100 dark:hover:bg-gray-800 rounded-md p-2"
       >
-        <category-list-item :category="category" @delete="onDelete" @archive="onArchive" />
+        <category-list-item
+          :category="category"
+          :is-deleting="category.isDeleting"
+          @delete="onDelete"
+          @archive="onArchive"
+        />
       </li>
     </ul>
   </section>
@@ -30,6 +35,7 @@ defineProps<{
     icon: string
     color: string
     transactions: number
+    isDeleting?: boolean
   }[]
 }>()
 

@@ -1,5 +1,8 @@
 <template>
-  <li class="flex justify-between items-center gap-3">
+  <li
+    class="flex justify-between items-center gap-3"
+    :class="{ 'opacity-50 pointer-events-none': isDeleting }"
+  >
     <div class="p-1">
       <CheckBox binary />
     </div>
@@ -52,6 +55,7 @@ const props = defineProps<{
     color: string
     transactions: number
   }
+  isDeleting?: boolean
 }>()
 
 function handleDelete() {

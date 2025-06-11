@@ -2,6 +2,7 @@ import './styles/main.css'
 
 import { QueryClient, VueQueryPlugin } from '@tanstack/vue-query'
 import PrimeVue from 'primevue/config'
+import ConfirmationService from 'primevue/confirmationservice'
 import ToastService from 'primevue/toastservice'
 import { createPinia } from 'pinia'
 import { createApp } from 'vue'
@@ -34,6 +35,7 @@ auth.onAuthStateChanged((user) => {
       queryClient,
     })
     app.use(PrimeVue, themeConfig)
+    app.use(ConfirmationService)
     app.use(ToastService)
 
     const userStore = useUserStore()
