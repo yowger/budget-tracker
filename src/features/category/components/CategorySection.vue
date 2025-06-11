@@ -2,11 +2,11 @@
   <section>
     <h3 class="text-lg font-semibold mb-3">{{ title }}</h3>
 
-    <ul class="space-y-3">
+    <ul>
       <li
         v-for="category in categories"
         :key="category.id"
-        class="transition hover:bg-gray-100 dark:hover:bg-gray-800 rounded-xl p-2"
+        class="transition hover:bg-gray-100 dark:hover:bg-gray-800 rounded-md p-2"
       >
         <category-list-item :category="category" @delete="onDelete" @archive="onArchive" />
       </li>

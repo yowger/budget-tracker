@@ -21,18 +21,18 @@
     <div class="flex gap-3">
       <Button icon="pi pi-cog" aria-label="edit" size="small"></Button>
       <Button
-        icon="pi pi-trash"
-        severity="danger"
-        aria-label="remove"
-        size="small"
-        @click="handleDelete"
-      ></Button>
-      <Button
         icon="pi pi-eye"
         severity="secondary"
         aria-label="archive"
         size="small"
         @click="handleArchive"
+      ></Button>
+      <Button
+        icon="pi pi-trash"
+        severity="danger"
+        aria-label="remove"
+        size="small"
+        @click="handleDelete"
       ></Button>
     </div>
   </li>
