@@ -46,6 +46,7 @@ declare module 'vue' {
     RouterView: typeof import('vue-router')['RouterView']
     RowSelect: typeof import('./src/components/base/RowSelect.vue')['default']
     Select: typeof import('primevue/select')['default']
+    Toast: typeof import('primevue/toast')['default']
     TransactionForm: typeof import('./src/components/forms/TransactionForm.vue')['default']
   }
   export interface ComponentCustomProperties {

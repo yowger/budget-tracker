@@ -1,9 +1,10 @@
-import { collection, getDocs } from 'firebase/firestore'
+import { collection, getDocs, query, where } from 'firebase/firestore'
 import { useQuery } from '@tanstack/vue-query'
 
 import { icons } from '@/constants/icons'
 import { db } from '@/includes/firebase'
 import { QUERY_KEYS } from '@/features/category/api/queryKeys'
+import useUserStore from '@/stores/user'
 
 export type Category = {
   id: string
@@ -17,7 +18,14 @@ export type Category = {
 }
 
 async function getCategories(): Promise<Category[]> {
-  const snapshot = await getDocs(collection(db, 'categories'))
+  const user = useUserStore().user
+
+  if (!user) {
+    return []
+  }
+
+  const q = query(collection(db, 'categories'), where('uid', '==', user.uid))
+  const snapshot = await getDocs(q)
 
   if (snapshot.empty) return []
 

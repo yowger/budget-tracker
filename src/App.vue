@@ -1,5 +1,6 @@
 <template>
   <router-view></router-view>
+  <toast />
 </template>
 
 <script setup lang="ts">
