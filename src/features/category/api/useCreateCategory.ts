@@ -2,7 +2,6 @@ import { useMutation, useQueryClient } from '@tanstack/vue-query'
 import { addDoc, collection, serverTimestamp } from 'firebase/firestore'
 
 import { db } from '@/includes/firebase'
-import useUserStore from '@/stores/user'
 
 export interface CreateCategory {
   name: string
@@ -11,27 +10,26 @@ export interface CreateCategory {
   type: 'expense' | 'income'
 }
 
-async function addCategory(category: CreateCategory) {
-  const user = useUserStore().user
-
-  const unauthenticated = !user?.uid
-  if (unauthenticated) {
-    throw new Error('User not authenticated')
-  }
-
+async function addCategory(category: CreateCategory, userId: string) {
   return await addDoc(collection(db, 'categories'), {
     ...category,
-    uid: user.uid,
+    uid: userId,
     isArchived: false,
     createdAt: serverTimestamp(),
   })
 }
 
-export function useCreateCategory() {
+export function useCreateCategory(userId: string | null) {
   const queryClient = useQueryClient()
 
   return useMutation({
-    mutationFn: addCategory,
+    mutationFn: (category: CreateCategory) => {
+      if (!userId) {
+        throw new Error('User is not authenticated')
+      }
+
+      return addCategory(category, userId)
+    },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['categories'] })
     },

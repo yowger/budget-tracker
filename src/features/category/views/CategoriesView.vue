@@ -2,16 +2,19 @@
   <Card>
     <template #content>
       <div class="space-y-8">
-        <category-form @submit="handleSubmit" :is-submitting="categoryPending"></category-form>
+        <category-form
+          @submit="handleSubmit"
+          :is-submitting="createCategoryPending"
+        ></category-form>
         <category-section
           title="Income Categories"
           :categories="incomeCategories"
-          @delete="handleDelete"
+          @delete="handleCategoryDelete"
         />
         <category-section
           title="Expense Categories"
           :categories="expenseCategories"
-          @delete="handleDelete"
+          @delete="handleCategoryDelete"
         />
       </div>
     </template>
@@ -23,16 +26,18 @@ import { computed } from 'vue'
 import { useToast } from 'primevue/usetoast'
 
 import { useCreateCategory, type CreateCategory } from '@/features/category/api/useCreateCategory'
+import { useGetCategories } from '@/features/category/api/useGetCategories'
+import { useDeleteCategory } from '@/features/category/api/useDeleteCategory'
 import type { CategoryFormSubmitEvent } from '@/features/category/components/CategoryForm.vue'
 import CategoryForm from '@/features/category/components/CategoryForm.vue'
 import CategorySection from '@/features/category/components/CategorySection.vue'
-
-import { useGetCategories } from '@/features/category/api/useGetCategories'
+import useUserStore from '@/stores/user'
 
 const toast = useToast()
-const { data: categories } = useGetCategories()
-const { mutate, isPending: categoryPending } = useCreateCategory()
-
+const user = useUserStore().user
+const { data: categories } = useGetCategories(user?.uid)
+const { mutate: createCategory, isPending: createCategoryPending } = useCreateCategory(user?.uid)
+const { mutate: deleteCategory, isPending: deleteCategoryPending } = useDeleteCategory(user?.uid)
 const incomeCategories = computed(() =>
   (categories.value ?? []).filter((category) => category.type === 'income'),
 )
@@ -53,7 +58,7 @@ function handleSubmit(form: CategoryFormSubmitEvent) {
     type: form.values.type.value,
   }
 
-  mutate(newCategory, {
+  createCategory(newCategory, {
     onSuccess: () => {
       toast.add({
         severity: 'success',
@@ -73,7 +78,43 @@ function handleSubmit(form: CategoryFormSubmitEvent) {
   })
 }
 
-function handleDelete(categoryId: string) {
-  console.log('🚀 ~ categoryId:', categoryId)
+function handleCategoryDelete(categoryId: string) {
+  if (!user?.uid) {
+    toast.add({
+      severity: 'error',
+      summary: 'Unauthorized',
+      detail: 'You must be logged in to delete a category.',
+      life: 4000,
+    })
+    return
+  }
+
+  deleteCategory(categoryId, {
+    onSuccess: (success) => {
+      if (success) {
+        toast.add({
+          severity: 'success',
+          summary: 'Deleted',
+          detail: 'Category deleted successfully.',
+          life: 3000,
+        })
+      } else {
+        toast.add({
+          severity: 'info',
+          summary: 'Cannot Delete',
+          detail: 'This category has linked transactions.',
+          life: 4000,
+        })
+      }
+    },
+    onError: () => {
+      toast.add({
+        severity: 'error',
+        summary: 'Error',
+        detail: 'Failed to delete category.',
+        life: 4000,
+      })
+    },
+  })
 }
 </script>

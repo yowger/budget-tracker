@@ -8,6 +8,13 @@ import {
 
 import { auth, googleProvider } from '@/includes/firebase'
 
+type UserState = {
+  uid: string | null
+  email: string | null
+  displayName: string | null
+  photoURL: string | null
+}
+
 export default defineStore('user', {
   state: () => ({
     user: {
@@ -15,7 +22,7 @@ export default defineStore('user', {
       email: null,
       displayName: null,
       photoURL: null,
-    },
+    } as UserState,
     redirectAfterLogin: null as string | null,
   }),
   actions: {

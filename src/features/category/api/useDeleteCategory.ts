@@ -28,11 +28,15 @@ function getUserTransactionsByCategory(
 }
 
 export async function deleteCategory(categoryId: string, userId: string): Promise<boolean> {
+  console.log('deleted 1')
   const transactionsSnapshot = await getUserTransactionsByCategory(categoryId, userId)
+  console.log('🚀 ~ deleteCategory ~ transactionsSnapshot:', transactionsSnapshot)
 
+  console.log('deleted 2')
   if (!transactionsSnapshot.empty) {
     return false
   }
+  console.log('deleted 3')
 
   const categoryRef = doc(db, 'categories', categoryId)
   await deleteDoc(categoryRef)
@@ -40,12 +44,17 @@ export async function deleteCategory(categoryId: string, userId: string): Promis
   return true
 }
 
-export function useDeleteCategory() {
+export function useDeleteCategory(userId: string | null) {
   const queryClient = useQueryClient()
 
   return useMutation({
-    mutationFn: ({ categoryId, userId }: { categoryId: string; userId: string }) =>
-      deleteCategory(categoryId, userId),
+    mutationFn: (categoryId: string) => {
+      if (!userId) {
+        throw new Error('User is not authenticated')
+      }
+
+      return deleteCategory(categoryId, userId)
+    },
     onSuccess: (success) => {
       if (success) {
         queryClient.invalidateQueries({ queryKey: QUERY_KEYS.categories })

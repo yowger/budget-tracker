@@ -4,7 +4,6 @@ import { useQuery } from '@tanstack/vue-query'
 import { icons } from '@/constants/icons'
 import { db } from '@/includes/firebase'
 import { QUERY_KEYS } from '@/features/category/api/queryKeys'
-import useUserStore from '@/stores/user'
 
 export type Category = {
   id: string
@@ -18,14 +17,8 @@ export type Category = {
   updatedAt?: unknown
 }
 
-async function getCategories(): Promise<Category[]> {
-  const user = useUserStore().user
-
-  if (!user) {
-    return []
-  }
-
-  const q = query(collection(db, 'categories'), where('uid', '==', user.uid))
+async function getCategories(userId: string): Promise<Category[]> {
+  const q = query(collection(db, 'categories'), where('uid', '==', userId))
   const snapshot = await getDocs(q)
 
   if (snapshot.empty) return []
@@ -36,10 +29,10 @@ async function getCategories(): Promise<Category[]> {
   }))
 }
 
-export function useGetCategories() {
+export function useGetCategories(userId: string | null) {
   return useQuery({
     queryKey: QUERY_KEYS.categories,
-    queryFn: getCategories,
+    queryFn: () => getCategories(userId as string),
     staleTime: 1000 * 60 * 60 * 24,
     select: (data) => {
       return data.map((category) => {
@@ -59,5 +52,6 @@ export function useGetCategories() {
         }
       })
     },
+    enabled: !!userId,
   })
 }
