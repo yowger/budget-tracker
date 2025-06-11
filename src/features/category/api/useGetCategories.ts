@@ -12,9 +12,10 @@ export type Category = {
   type: 'expense' | 'income'
   icon: string
   color: string
+  transactions: 0
+  isArchived: boolean
   createdAt?: unknown
   updatedAt?: unknown
-  transactions: 0
 }
 
 async function getCategories(): Promise<Category[]> {

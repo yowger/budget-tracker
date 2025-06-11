@@ -22,6 +22,7 @@ async function addCategory(category: CreateCategory) {
   return await addDoc(collection(db, 'categories'), {
     ...category,
     uid: user.uid,
+    isArchived: false,
     createdAt: serverTimestamp(),
   })
 }

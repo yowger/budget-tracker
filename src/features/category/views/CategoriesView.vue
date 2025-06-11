@@ -3,8 +3,16 @@
     <template #content>
       <div class="space-y-8">
         <category-form @submit="handleSubmit" :is-submitting="categoryPending"></category-form>
-        <category-section title="Income Categories" :categories="incomeCategories" />
-        <category-section title="Expense Categories" :categories="expenseCategories" />
+        <category-section
+          title="Income Categories"
+          :categories="incomeCategories"
+          @delete="handleDelete"
+        />
+        <category-section
+          title="Expense Categories"
+          :categories="expenseCategories"
+          @delete="handleDelete"
+        />
       </div>
     </template>
   </Card>
@@ -35,12 +43,6 @@ const expenseCategories = computed(() =>
 
 function handleSubmit(form: CategoryFormSubmitEvent) {
   if (!form.valid) {
-    toast.add({
-      severity: 'warn',
-      summary: 'Validation Error',
-      detail: 'Please fill in all required fields.',
-      life: 3000,
-    })
     return
   }
 
@@ -69,5 +71,9 @@ function handleSubmit(form: CategoryFormSubmitEvent) {
       })
     },
   })
+}
+
+function handleDelete(categoryId: string) {
+  console.log('🚀 ~ categoryId:', categoryId)
 }
 </script>

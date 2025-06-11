@@ -20,19 +20,45 @@
 
     <div class="flex gap-3">
       <Button icon="pi pi-cog" aria-label="edit" size="small"></Button>
-      <Button icon="pi pi-eye" severity="secondary" aria-label="hide" size="small"></Button>
-      <Button icon="pi pi-trash" severity="danger" aria-label="remove" size="small"></Button>
+      <Button
+        icon="pi pi-trash"
+        severity="danger"
+        aria-label="remove"
+        size="small"
+        @click="handleDelete"
+      ></Button>
+      <Button
+        icon="pi pi-eye"
+        severity="secondary"
+        aria-label="archive"
+        size="small"
+        @click="handleArchive"
+      ></Button>
     </div>
   </li>
 </template>
 
 <script setup lang="ts">
-defineProps<{
+const emit = defineEmits<{
+  (e: 'delete', id: string): void
+  (e: 'archive', id: string): void
+}>()
+
+const props = defineProps<{
   category: {
+    id: string
     name: string
     icon: string
     color: string
     transactions: number
   }
 }>()
+
+function handleDelete() {
+  emit('delete', props.category.id)
+}
+
+function handleArchive() {
+  emit('archive', props.category.id)
+}
 </script>
