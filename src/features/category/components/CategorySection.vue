@@ -2,7 +2,8 @@
   <section>
     <h3 class="text-lg font-semibold mb-3">{{ title }}</h3>
 
-    <ul>
+    <CategoryListItemSkeleton v-if="isLoading" />
+    <ul v-else>
       <li
         v-for="category in categories"
         :key="category.id"
@@ -21,6 +22,7 @@
 
 <script setup lang="ts">
 import CategoryListItem from '@/features/category/components/CategoryListItem.vue'
+import CategoryListItemSkeleton from '@/features/category/components/CategoryListItemSkeleton.vue'
 
 const emit = defineEmits<{
   (e: 'delete', categoryId: string): void
@@ -37,6 +39,7 @@ defineProps<{
     transactions: number
     isDeleting?: boolean
   }[]
+  isLoading?: boolean
 }>()
 
 function onDelete(categoryId: string) {

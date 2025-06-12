@@ -6,6 +6,7 @@
           @submit="handleSubmit"
           :is-submitting="createCategoryPending"
         ></category-form>
+
         <category-section
           title="Income Categories"
           :categories="
@@ -15,6 +16,7 @@
             }))
           "
           @delete="(categoryId) => handleConfirmDeleteCategory(categoryId)"
+          :is-loading="categoriesPending"
         />
         <category-section
           title="Expense Categories"
@@ -25,6 +27,7 @@
             }))
           "
           @delete="(categoryId) => handleConfirmDeleteCategory(categoryId)"
+          :is-loading="categoriesPending"
         />
       </div>
     </template>
@@ -50,7 +53,7 @@ const deletingCategoryIds = ref<Set<string>>(new Set())
 const toast = useToast()
 const confirm = useConfirm()
 const user = useUserStore().user
-const { data: categories } = useGetCategories(user?.uid)
+const { data: categories, isPending: categoriesPending } = useGetCategories(user?.uid)
 const { mutate: createCategory, isPending: createCategoryPending } = useCreateCategory(user?.uid)
 const { mutate: deleteCategory, isPending: deleteCategoryPending } = useDeleteCategory(user?.uid)
 
