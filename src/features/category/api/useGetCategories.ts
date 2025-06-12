@@ -41,16 +41,11 @@ export function useGetCategories(userId: string | null) {
           'pi pi-question'
 
         return {
-          id: category.id,
-          name: category.name,
-          icon: icon,
-          type: category.type,
-          color: category.color,
-          updatedAt: category.updatedAt,
-          createdAt: category.createdAt,
+          ...category,
+          icon,
           transactions: 0,
         }
-      })
+      }) as Category[]
     },
     enabled: !!userId,
   })

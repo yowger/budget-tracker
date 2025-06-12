@@ -1,5 +1,5 @@
 <template>
-  <Form v-slot="$form" :initialValues="initialValues" :resolver @submit="onSubmit">
+  <Form ref="form" v-slot="$form" :initialValues="initialValues" :resolver @submit="onSubmit">
     <div class="flex flex-col gap-4">
       <div class="flex gap-2">
         <Button
@@ -51,6 +51,7 @@
             </div>
           </template>
         </Select>
+
         <Message
           v-if="$form.category?.invalid"
           severity="error"
@@ -156,38 +157,33 @@
 </template>
 
 <script setup lang="ts">
+import { ref, reactive, computed } from 'vue'
+import { templateRef } from '@vueuse/core'
+import { z } from 'zod'
 import { type FormInstance, type FormSubmitEvent } from '@primevue/forms'
 import { zodResolver } from '@primevue/forms/resolvers/zod'
-import { templateRef } from '@vueuse/core'
-import { ref, reactive, computed } from 'vue'
-import { z } from 'zod'
+
+import type { Category } from '@/features/category/api/useGetCategories'
 
 const form = templateRef<FormInstance>('form')
 
-const allCategories = [
-  { name: 'Food & Drink', value: 'food', type: 'expense', icon: 'pi pi-shop' },
-  { name: 'Shopping', value: 'shopping', type: 'expense', icon: 'pi pi-shopping-bag' },
-  { name: 'Transport', value: 'transport', type: 'expense', icon: 'pi pi-car' },
-  { name: 'Home', value: 'home', type: 'expense', icon: 'pi pi-home' },
-  { name: 'Entertainment', value: 'entertainment', type: 'expense', icon: 'pi pi-star' },
-  { name: 'Groceries', value: 'groceries', type: 'expense', icon: 'pi pi-apple' },
-  { name: 'Other (Expense)', value: 'other_expense', type: 'expense', icon: 'pi pi-ellipsis-h' },
+const tabs = ['expense', 'income'] as const
+const selectedType = ref<'income' | 'expense'>('expense')
 
-  { name: 'Salary', value: 'salary', type: 'income', icon: 'pi pi-wallet' },
-  { name: 'Business', value: 'business', type: 'income', icon: 'pi pi-briefcase' },
-  { name: 'Gifts', value: 'gifts_income', type: 'income', icon: 'pi pi-gift' },
-  { name: 'Extra Income', value: 'extra', type: 'income', icon: 'pi pi-plus' },
-  { name: 'Loan', value: 'loan', type: 'income', icon: 'pi pi-credit-card' },
-  { name: 'Other (Income)', value: 'other_income', type: 'income', icon: 'pi pi-ellipsis-h' },
-]
+// const currencies = [
+//   { name: 'USD', value: 'USD' },
+//   { name: 'PHP', value: 'PHP' },
+//   { name: 'AUD', value: 'AUD' },
+//   { name: 'EUR', value: 'EUR' },
+//   { name: 'GBP', value: 'GBP' },
+// ]
 
-const currencies = [
-  { name: 'USD', value: 'USD' },
-  { name: 'PHP', value: 'PHP' },
-  { name: 'AUD', value: 'AUD' },
-  { name: 'EUR', value: 'EUR' },
-  { name: 'GBP', value: 'GBP' },
-]
+const props = defineProps<{
+  categories: Category[]
+  categoriesLoading: boolean
+  currencies: { name: string; value: string }[]
+  currenciesLoading: boolean
+}>()
 
 const emit = defineEmits<{
   (e: 'submit', form: FormSubmitEvent): void
@@ -197,7 +193,6 @@ const categorySchema = z.union([
   z.string().min(1, 'Category is required'),
   z.object({
     name: z.string().min(1, 'Category is required'),
-    value: z.string(),
     type: z.string(),
     icon: z.string(),
   }),
@@ -212,7 +207,6 @@ const transactionSchema = z.object({
 })
 
 type TransactionFormData = z.infer<typeof transactionSchema>
-
 const resolver = zodResolver(transactionSchema)
 
 const initialValues = reactive<TransactionFormData>({
@@ -223,16 +217,20 @@ const initialValues = reactive<TransactionFormData>({
   note: '',
 })
 
-const tabs = ['expense', 'income'] as const
-const selectedType = ref<'income' | 'expense'>('expense')
-function selectType(type: 'income' | 'expense') {
-  selectedType.value = type
-  form.value.setValues({ type })
+const filteredCategories = computed(() => {
+  return props.categories.filter((c) => c.type === selectedType.value)
+})
+
+function resetCategory() {
+  form.value.setFieldValue('category', undefined)
+  form.value.states.category.touched = false
+  form.value.states.category.dirty = false
 }
 
-const filteredCategories = computed(() =>
-  allCategories.filter((c) => c.type === selectedType.value),
-)
+function selectType(type: 'income' | 'expense') {
+  selectedType.value = type
+  resetCategory()
+}
 
 function onSubmit(form: FormSubmitEvent) {
   emit('submit', form)

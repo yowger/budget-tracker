@@ -16,7 +16,7 @@
             }))
           "
           @delete="(categoryId) => handleConfirmDeleteCategory(categoryId)"
-          :is-loading="categoriesPending"
+          :categories-loading="categoriesPending"
         />
         <category-section
           title="Expense Categories"
@@ -27,7 +27,7 @@
             }))
           "
           @delete="(categoryId) => handleConfirmDeleteCategory(categoryId)"
-          :is-loading="categoriesPending"
+          :categories-loading="categoriesPending"
         />
       </div>
     </template>

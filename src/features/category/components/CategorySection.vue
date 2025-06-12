@@ -2,7 +2,7 @@
   <section>
     <h3 class="text-lg font-semibold mb-3">{{ title }}</h3>
 
-    <CategoryListItemSkeleton v-if="isLoading" />
+    <CategoryListItemSkeleton v-if="categoriesLoading" />
     <ul v-else>
       <li
         v-for="category in categories"
@@ -39,7 +39,7 @@ defineProps<{
     transactions: number
     isDeleting?: boolean
   }[]
-  isLoading?: boolean
+  categoriesLoading?: boolean
 }>()
 
 function onDelete(categoryId: string) {

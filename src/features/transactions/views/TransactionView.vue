@@ -24,29 +24,13 @@
     @hide="handleCloseTransactDialog"
     class="w-11/12 md:w-1/2"
   >
-    <!-- <template #header>
-      <div class="inline-flex items-center justify-center gap-2">
-        <Avatar
-          image="https://primefaces.org/cdn/primevue/images/avatar/amyelsner.png"
-          shape="circle"
-        />
-        <span class="font-bold whitespace-nowrap">Amy Elsner</span>
-      </div>
-    </template>
-    <span class="text-surface-500 dark:text-surface-400 block mb-8">Update your information.</span>
-    <div class="flex items-center gap-4 mb-4">
-      <label for="username" class="font-semibold w-24">Username</label>
-      <InputText id="username" class="flex-auto" autocomplete="off" />
-    </div>
-    <div class="flex items-center gap-4 mb-2">
-      <label for="email" class="font-semibold w-24">Email</label>
-      <InputText id="email" class="flex-auto" autocomplete="off" />
-    </div>
-    <template #footer>
-      <Button label="Cancel" text severity="secondary" @click="visible = false" autofocus />
-      <Button label="Save" outlined severity="secondary" @click="visible = false" autofocus />
-    </template> -->
-    <transaction-form @submit="handleAddTransaction"></transaction-form>
+    <TransactionForm
+      :categories="categories ?? []"
+      :categories-loading="categoriesPending"
+      :currencies="currencies ?? []"
+      :currencies-loading="currenciesLoading"
+      @submit="handleAddTransaction"
+    />
   </Dialog>
 </template>
 
@@ -55,6 +39,13 @@ import type { FormSubmitEvent } from '@primevue/forms'
 import { ref } from 'vue'
 
 import TransactionForm from '@/features/transactions/components/TransactionForm.vue'
+import { useGetCategories } from '@/features/category/api/useGetCategories'
+import { useGetCurrency } from '@/features/transactions/api/useGetCurrency'
+import useUserStore from '@/stores/user'
+
+const user = useUserStore().user
+const { data: categories, isPending: categoriesPending } = useGetCategories(user?.uid)
+const { data: currencies, isLoading: currenciesLoading } = useGetCurrency()
 
 let showTransactDialog = ref(false)
 function showAddTransaction() {
