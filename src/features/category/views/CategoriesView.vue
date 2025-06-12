@@ -54,8 +54,8 @@ const toast = useToast()
 const confirm = useConfirm()
 const user = useUserStore().user
 const { data: categories, isPending: categoriesPending } = useGetCategories(user?.uid)
-const { mutate: createCategory, isPending: createCategoryPending } = useCreateCategory(user?.uid)
-const { mutate: deleteCategory, isPending: deleteCategoryPending } = useDeleteCategory(user?.uid)
+const { mutate: createCategory, isPending: createCategoryPending } = useCreateCategory()
+const { mutate: deleteCategory, isPending: deleteCategoryPending } = useDeleteCategory()
 
 const incomeCategories = computed(() =>
   (categories.value ?? []).filter((category) => category.type === 'income'),
@@ -69,7 +69,25 @@ function isDeleting(categoryId: string): boolean {
 }
 
 function handleSubmit(form: CategoryFormSubmitEvent) {
+  if (!user.uid) {
+    toast.add({
+      severity: 'error',
+      summary: 'Unauthorized',
+      detail: 'You must be logged in to create a category.',
+      life: 4000,
+    })
+
+    return
+  }
+
   if (!form.valid) {
+    toast.add({
+      severity: 'error',
+      summary: 'Invalid Form',
+      detail: 'Please fill in all required fields.',
+      life: 4000,
+    })
+
     return
   }
 
@@ -80,24 +98,27 @@ function handleSubmit(form: CategoryFormSubmitEvent) {
     type: form.values.type.value,
   }
 
-  createCategory(newCategory, {
-    onSuccess: () => {
-      toast.add({
-        severity: 'success',
-        summary: 'Success',
-        detail: 'Category created successfully!',
-        life: 3000,
-      })
+  createCategory(
+    { userId: user.uid, category: newCategory },
+    {
+      onSuccess: () => {
+        toast.add({
+          severity: 'success',
+          summary: 'Success',
+          detail: 'Category created successfully!',
+          life: 3000,
+        })
+      },
+      onError: () => {
+        toast.add({
+          severity: 'error',
+          summary: 'Error',
+          detail: 'Failed to create category.',
+          life: 4000,
+        })
+      },
     },
-    onError: () => {
-      toast.add({
-        severity: 'error',
-        summary: 'Error',
-        detail: 'Failed to create category.',
-        life: 4000,
-      })
-    },
-  })
+  )
 }
 
 function handleConfirmDeleteCategory(categoryId: string) {
@@ -124,6 +145,19 @@ function handleConfirmDeleteCategory(categoryId: string) {
 }
 
 function handleCategoryDelete(categoryId: string) {
+  if (!user.uid) {
+    toast.add({
+      severity: 'error',
+      summary: 'Unauthorized',
+      detail: 'You must be logged in to delete a category.',
+      life: 4000,
+    })
+
+    deletingCategoryIds.value.delete(categoryId)
+
+    return
+  }
+
   const unauthorized = !user?.uid
   if (unauthorized) {
     toast.add({
@@ -138,35 +172,38 @@ function handleCategoryDelete(categoryId: string) {
     return
   }
 
-  deleteCategory(categoryId, {
-    onSuccess: (success) => {
-      if (success) {
+  deleteCategory(
+    { categoryId, userId: user.uid },
+    {
+      onSuccess: (success) => {
+        if (success) {
+          toast.add({
+            severity: 'success',
+            summary: 'Deleted',
+            detail: 'Category deleted successfully.',
+            life: 3000,
+          })
+        } else {
+          toast.add({
+            severity: 'info',
+            summary: 'Cannot Delete',
+            detail: 'This category has linked transactions.',
+            life: 4000,
+          })
+        }
+      },
+      onError: () => {
         toast.add({
-          severity: 'success',
-          summary: 'Deleted',
-          detail: 'Category deleted successfully.',
-          life: 3000,
-        })
-      } else {
-        toast.add({
-          severity: 'info',
-          summary: 'Cannot Delete',
-          detail: 'This category has linked transactions.',
+          severity: 'error',
+          summary: 'Error',
+          detail: 'Failed to delete category.',
           life: 4000,
         })
-      }
+      },
+      onSettled: () => {
+        deletingCategoryIds.value.delete(categoryId)
+      },
     },
-    onError: () => {
-      toast.add({
-        severity: 'error',
-        summary: 'Error',
-        detail: 'Failed to delete category.',
-        life: 4000,
-      })
-    },
-    onSettled: () => {
-      deletingCategoryIds.value.delete(categoryId)
-    },
-  })
+  )
 }
 </script>

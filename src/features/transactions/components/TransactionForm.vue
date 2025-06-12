@@ -170,14 +170,6 @@ const form = templateRef<FormInstance>('form')
 const tabs = ['expense', 'income'] as const
 const selectedType = ref<'income' | 'expense'>('expense')
 
-// const currencies = [
-//   { name: 'USD', value: 'USD' },
-//   { name: 'PHP', value: 'PHP' },
-//   { name: 'AUD', value: 'AUD' },
-//   { name: 'EUR', value: 'EUR' },
-//   { name: 'GBP', value: 'GBP' },
-// ]
-
 const props = defineProps<{
   categories: Category[]
   categoriesLoading: boolean

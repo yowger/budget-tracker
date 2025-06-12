@@ -19,15 +19,11 @@ async function addCategory(category: CreateCategory, userId: string) {
   })
 }
 
-export function useCreateCategory(userId: string | null) {
+export function useCreateCategory() {
   const queryClient = useQueryClient()
 
   return useMutation({
-    mutationFn: (category: CreateCategory) => {
-      if (!userId) {
-        throw new Error('User is not authenticated')
-      }
-
+    mutationFn: async ({ category, userId }: { category: CreateCategory; userId: string }) => {
       return addCategory(category, userId)
     },
     onSuccess: () => {
