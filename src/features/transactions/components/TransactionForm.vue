@@ -1,6 +1,8 @@
 <template>
   <Form ref="form" v-slot="$form" :initialValues="initialValues" :resolver @submit="onSubmit">
     <div class="flex flex-col gap-4">
+      <input-text type="hidden" name="type" :value="selectedType" />
+
       <div class="flex gap-2">
         <Button
           v-for="tab in tabs"
@@ -220,6 +222,7 @@ const categorySchema = z.union([
 
 const transactionSchema = z.object({
   amount: z.coerce.number().gt(0, { message: 'Amount must be a positive number' }),
+  type: z.enum(['income', 'expense']),
   currency: z.object({
     id: z.string(),
     currency: z.string(),
@@ -235,6 +238,7 @@ const resolver = zodResolver(transactionSchema)
 
 const initialValues = reactive<TransactionFormData>({
   amount: 0,
+  type: 'expense',
   currency: {
     id: '',
     currency: '',
@@ -268,6 +272,9 @@ function resetCategory() {
 
 function selectType(type: 'income' | 'expense') {
   selectedType.value = type
+
+  form.value.setFieldValue('type', type)
+
   resetCategory()
 }
 

@@ -4,13 +4,13 @@ import { addDoc, collection, serverTimestamp } from 'firebase/firestore'
 import { db } from '@/includes/firebase'
 
 export type CreateTransactionInput = {
+  uid: string
   amount: number
   currencyId: string
   categoryId: string
   date: Date
   note?: string
   type: 'income' | 'expense'
-  userId: string
 }
 
 export async function createTransaction(data: CreateTransactionInput) {

@@ -41,7 +41,10 @@ import { computed, ref } from 'vue'
 import { useConfirm } from 'primevue/useconfirm'
 import { useToast } from 'primevue/usetoast'
 
-import { useCreateCategory, type CreateCategory } from '@/features/category/api/useCreateCategory'
+import {
+  useCreateCategory,
+  type CreateCategoryInput,
+} from '@/features/category/api/useCreateCategory'
 import { useGetCategories } from '@/features/category/api/useGetCategories'
 import { useDeleteCategory } from '@/features/category/api/useDeleteCategory'
 import type { CategoryFormSubmitEvent } from '@/features/category/components/CategoryForm.vue'
@@ -81,25 +84,17 @@ function handleSubmit(form: CategoryFormSubmitEvent) {
   }
 
   if (!form.valid) {
-    toast.add({
-      severity: 'error',
-      summary: 'Invalid Form',
-      detail: 'Please fill in all required fields.',
-      life: 4000,
-    })
-
     return
   }
 
-  const newCategory: CreateCategory = {
-    name: form.values.name,
-    icon: form.values.icon.label,
-    color: form.values.color,
-    type: form.values.type.value,
-  }
-
   createCategory(
-    { userId: user.uid, category: newCategory },
+    {
+      uid: user.uid,
+      name: form.values.name,
+      icon: form.values.icon.label,
+      color: form.values.color,
+      type: form.values.type.value,
+    },
     {
       onSuccess: () => {
         toast.add({

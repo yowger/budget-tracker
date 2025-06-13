@@ -37,6 +37,7 @@
 <script setup lang="ts">
 import type { FormSubmitEvent } from '@primevue/forms'
 import { ref } from 'vue'
+import { useToast } from 'primevue/usetoast'
 
 import TransactionForm from '@/features/transactions/components/TransactionForm.vue'
 import { useCreateTransaction } from '@/features/transactions/api/useCreateTransactions'
@@ -44,6 +45,7 @@ import { useGetCategories } from '@/features/category/api/useGetCategories'
 import { useGetCurrency } from '@/features/transactions/api/useGetCurrency'
 import useUserStore from '@/stores/user'
 
+const toast = useToast()
 const user = useUserStore().user
 const { data: categories, isPending: categoriesPending } = useGetCategories(user?.uid)
 const { data: currencies, isLoading: currenciesLoading } = useGetCurrency()
@@ -61,6 +63,13 @@ function handleCloseTransactDialog() {
 function handleAddTransaction(form: FormSubmitEvent) {
   console.log('🚀 ~ handleAddTransaction ~ form:', form)
   if (!user?.uid) {
+    toast.add({
+      severity: 'error',
+      summary: 'Unauthorized',
+      detail: 'You must be logged in to create a category.',
+      life: 4000,
+    })
+
     return
   }
 
@@ -68,20 +77,35 @@ function handleAddTransaction(form: FormSubmitEvent) {
     return
   }
 
-  // createTransaction({
-  //   userId: user?.uid,
-  //   amount: form.values.amount,
-
-  // })
-
-  /*
-    amount: number
-    currency: string
-    categoryId: string
-    date: Date
-    note?: string
-    type: 'income' | 'expense'
-    userId: string
-  */
+  createTransaction(
+    {
+      uid: user.uid,
+      amount: form.values.amount,
+      currencyId: form.values.currency.id,
+      categoryId: form.values.category.id,
+      date: form.values.date,
+      note: form.values.note,
+      type: form.values.type,
+    },
+    {
+      onSuccess: () => {
+        toast.add({
+          severity: 'success',
+          summary: 'Success',
+          detail: 'Transaction saved successfully!',
+          life: 3000,
+        })
+      },
+      onError: (error) => {
+        console.log('🚀 ~ handleAddTransaction ~ error:', error)
+        toast.add({
+          severity: 'error',
+          summary: 'Error',
+          detail: 'Failed to save transaction.',
+          life: 4000,
+        })
+      },
+    },
+  )
 }
 </script>
