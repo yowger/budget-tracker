@@ -39,6 +39,7 @@ import type { FormSubmitEvent } from '@primevue/forms'
 import { ref } from 'vue'
 
 import TransactionForm from '@/features/transactions/components/TransactionForm.vue'
+import { useCreateTransaction } from '@/features/transactions/api/useCreateTransactions'
 import { useGetCategories } from '@/features/category/api/useGetCategories'
 import { useGetCurrency } from '@/features/transactions/api/useGetCurrency'
 import useUserStore from '@/stores/user'
@@ -46,6 +47,7 @@ import useUserStore from '@/stores/user'
 const user = useUserStore().user
 const { data: categories, isPending: categoriesPending } = useGetCategories(user?.uid)
 const { data: currencies, isLoading: currenciesLoading } = useGetCurrency()
+const { mutate: createTransaction } = useCreateTransaction()
 
 let showTransactDialog = ref(false)
 function showAddTransaction() {
@@ -57,8 +59,29 @@ function handleCloseTransactDialog() {
 }
 
 function handleAddTransaction(form: FormSubmitEvent) {
-  if (form.valid) {
-    console.log('save transaction')
+  console.log('🚀 ~ handleAddTransaction ~ form:', form)
+  if (!user?.uid) {
+    return
   }
+
+  if (!form.valid) {
+    return
+  }
+
+  // createTransaction({
+  //   userId: user?.uid,
+  //   amount: form.values.amount,
+
+  // })
+
+  /*
+    amount: number
+    currency: string
+    categoryId: string
+    date: Date
+    note?: string
+    type: 'income' | 'expense'
+    userId: string
+  */
 }
 </script>

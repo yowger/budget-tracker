@@ -5,7 +5,7 @@ import { db } from '@/includes/firebase'
 
 export type CreateTransactionInput = {
   amount: number
-  currency: string
+  currencyId: string
   categoryId: string
   date: Date
   note?: string

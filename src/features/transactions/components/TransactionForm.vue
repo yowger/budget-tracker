@@ -25,7 +25,14 @@
         >
           <template #value="slotProps">
             <div v-if="slotProps.value" class="flex items-center gap-2">
-              <i :class="slotProps.value.icon" class="text-sm text-gray-600" />
+              <div
+                class="relative w-5 h-5 rounded-sm flex items-center justify-center"
+                :style="{
+                  backgroundColor: slotProps.value.color ? slotProps.value.color : '#E5E7EB',
+                }"
+              >
+                <i :class="slotProps.value.icon" class="text-xs text-white"></i>
+              </div>
               <span>{{ slotProps.value.name }}</span>
             </div>
             <span v-else>{{ slotProps.placeholder }}</span>
@@ -33,7 +40,14 @@
 
           <template #option="slotProps">
             <div class="flex items-center gap-2">
-              <i :class="slotProps.option.icon" class="text-sm text-gray-600"></i>
+              <div
+                class="relative w-5 h-5 rounded-sm flex items-center justify-center"
+                :style="{
+                  backgroundColor: slotProps.option.color ? slotProps.option.color : '#E5E7EB',
+                }"
+              >
+                <i :class="slotProps.option.icon" class="text-xs text-white"></i>
+              </div>
               <span>{{ slotProps.option.name }}</span>
             </div>
           </template>
@@ -108,7 +122,8 @@
             type="number"
             placeholder="0.00"
             size="small"
-            class="w-full"
+            class="w-full font-semibold"
+            :class="selectedType === 'income' ? 'text-green-500' : 'text-red-500'"
           />
           <Message
             v-if="$form.amount?.invalid"
@@ -128,12 +143,23 @@
             name="currency"
             :options="currencies"
             optionLabel="name"
-            optionValue="value"
-            placeholder="Currency"
+            placeholder="Select currency"
             size="small"
             class="w-full"
             fluid
-          ></Select>
+          >
+            <template #value="slotProps">
+              <span v-if="slotProps.value"> {{ slotProps.value.currency }} </span>
+              <span v-else>{{ slotProps.placeholder }}</span>
+            </template>
+
+            <template #option="slotProps">
+              <div class="flex gap-2 items-center">
+                <span class="text-gray-500 w-12">{{ slotProps.option.currency }}</span>
+                <span class="whitespace-nowrap">{{ slotProps.option.name }}</span>
+              </div>
+            </template>
+          </Select>
           <Message
             v-if="$form.currency?.invalid"
             severity="error"
@@ -157,13 +183,14 @@
 </template>
 
 <script setup lang="ts">
-import { ref, reactive, computed } from 'vue'
+import { ref, reactive, computed, watch } from 'vue'
 import { templateRef } from '@vueuse/core'
 import { z } from 'zod'
 import { type FormInstance, type FormSubmitEvent } from '@primevue/forms'
 import { zodResolver } from '@primevue/forms/resolvers/zod'
 
 import type { Category } from '@/features/category/api/useGetCategories'
+import type { Currency } from '@/features/transactions/api/useGetCurrency'
 
 const form = templateRef<FormInstance>('form')
 
@@ -173,7 +200,7 @@ const selectedType = ref<'income' | 'expense'>('expense')
 const props = defineProps<{
   categories: Category[]
   categoriesLoading: boolean
-  currencies: { name: string; value: string }[]
+  currencies: Currency[]
   currenciesLoading: boolean
 }>()
 
@@ -184,6 +211,7 @@ const emit = defineEmits<{
 const categorySchema = z.union([
   z.string().min(1, 'Category is required'),
   z.object({
+    id: z.string(),
     name: z.string().min(1, 'Category is required'),
     type: z.string(),
     icon: z.string(),
@@ -192,7 +220,11 @@ const categorySchema = z.union([
 
 const transactionSchema = z.object({
   amount: z.coerce.number().gt(0, { message: 'Amount must be a positive number' }),
-  currency: z.string().min(1, 'Currency is required'),
+  currency: z.object({
+    id: z.string(),
+    currency: z.string(),
+    name: z.string(),
+  }),
   category: categorySchema,
   date: z.date({ required_error: 'Date is required' }),
   note: z.string().optional(),
@@ -203,11 +235,28 @@ const resolver = zodResolver(transactionSchema)
 
 const initialValues = reactive<TransactionFormData>({
   amount: 0,
-  currency: 'USD',
+  currency: {
+    id: '',
+    currency: '',
+    name: '',
+  },
   category: '',
   date: new Date(),
   note: '',
 })
+
+watch(
+  () => props.currencies,
+  (currencies) => {
+    if (currencies.length) {
+      const usd = currencies.find((c) => c.currency === 'USD')
+      if (usd) {
+        initialValues.currency = usd
+      }
+    }
+  },
+  { immediate: true },
+)
 
 const filteredCategories = computed(() => {
   return props.categories.filter((c) => c.type === selectedType.value)
@@ -215,8 +264,6 @@ const filteredCategories = computed(() => {
 
 function resetCategory() {
   form.value.setFieldValue('category', undefined)
-  form.value.states.category.touched = false
-  form.value.states.category.dirty = false
 }
 
 function selectType(type: 'income' | 'expense') {
