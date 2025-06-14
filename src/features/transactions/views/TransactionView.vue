@@ -61,7 +61,6 @@ function handleCloseTransactDialog() {
 }
 
 function handleAddTransaction(form: FormSubmitEvent) {
-  console.log('🚀 ~ handleAddTransaction ~ form:', form)
   if (!user?.uid) {
     toast.add({
       severity: 'error',

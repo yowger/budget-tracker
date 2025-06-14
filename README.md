@@ -14,6 +14,7 @@ A modern web app to track expenses
 ## features
 
 ### Base
+- Teams for group transaction management
 - Add income & expense transactions
 - Categorize transactions (e.g. Food, Rent, Entertainment)
 - Set a monthly budget
