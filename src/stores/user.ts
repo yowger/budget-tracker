@@ -62,59 +62,79 @@ export default defineStore('user', {
       }
     },
     async createUserProfile(user: User): Promise<UserState> {
-      const userRef = doc(db, 'users', user.uid)
+      try {
+        const userRef = doc(db, 'users', user.uid)
 
-      const userProfile: UserState = {
-        uid: user.uid,
-        email: user.email,
-        displayName: user.displayName || '',
-        photoURL: user.photoURL || '',
-        groupIds: [],
-        defaultGroupId: null,
-        defaultCurrencyId: null,
-        preferredCurrencies: [],
-        setupStep: SETUP_STEPS.GROUP,
-        createdAt: serverTimestamp(),
+        const userProfile: UserState = {
+          uid: user.uid,
+          email: user.email,
+          displayName: user.displayName || '',
+          photoURL: user.photoURL || '',
+          groupIds: [],
+          defaultGroupId: null,
+          defaultCurrencyId: null,
+          preferredCurrencies: [],
+          setupStep: SETUP_STEPS.GROUP,
+          createdAt: serverTimestamp(),
+        }
+
+        await setDoc(userRef, userProfile, { merge: true })
+
+        return userProfile
+      } catch (error) {
+        throw error
       }
-
-      await setDoc(userRef, userProfile, { merge: true })
-
-      return userProfile
     },
     async fetchUserProfile(uid: string): Promise<UserState | null> {
-      const userRef = doc(db, 'users', uid)
-      const snapshot = await getDoc(userRef)
+      try {
+        const userRef = doc(db, 'users', uid)
+        const snapshot = await getDoc(userRef)
 
-      if (!snapshot.exists()) {
-        return null
+        if (!snapshot.exists()) {
+          return null
+        }
+
+        return {
+          ...snapshot.data(),
+          displayName: snapshot.data().displayName || '',
+          photoURL: snapshot.data().photoURL || '',
+        } as UserState
+      } catch (error) {
+        throw error
       }
-
-      return {
-        ...snapshot.data(),
-        displayName: snapshot.data().displayName || '',
-        photoURL: snapshot.data().photoURL || '',
-      } as UserState
     },
     async emailRegister(email: string, password: string) {
-      const result = await createUserWithEmailAndPassword(auth, email, password)
+      try {
+        const result = await createUserWithEmailAndPassword(auth, email, password)
 
-      const user = result.user
-      const createdUser = await this.createUserProfile(user)
-      this.setUser(createdUser)
+        const user = result.user
+        const createdUser = await this.createUserProfile(user)
+        this.setUser(createdUser)
+      } catch (error) {
+        throw error
+      }
     },
     async emailLogin(email: string, password: string) {
-      const result = await signInWithEmailAndPassword(auth, email, password)
+      try {
+        const result = await signInWithEmailAndPassword(auth, email, password)
 
-      const user = result.user
-      const userProfile = await this.fetchUserProfile(user.uid)
-      this.setUser(userProfile ?? (await this.createUserProfile(user)))
+        const user = result.user
+        const userProfile = await this.fetchUserProfile(user.uid)
+        this.setUser(userProfile ?? (await this.createUserProfile(user)))
+      } catch (error) {
+        throw error
+      }
     },
     async googleLogin() {
-      const result = await signInWithPopup(auth, googleProvider)
+      try {
+        const result = await signInWithPopup(auth, googleProvider)
 
-      const user = result.user
-      const userProfile = await this.fetchUserProfile(user.uid)
-      this.setUser(userProfile ?? (await this.createUserProfile(user)))
+        const user = result.user
+        const userProfile = await this.fetchUserProfile(user.uid)
+        this.setUser(userProfile ?? (await this.createUserProfile(user)))
+      } catch (error) {
+        throw error
+      }
     },
     async signOut() {
       await signOut(auth)
