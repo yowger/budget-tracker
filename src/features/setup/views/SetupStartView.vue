@@ -22,7 +22,7 @@ onMounted(() => {
   } else if (step === SETUP_STEPS.CURRENCY) {
     router.replace({ name: 'setup-currency' })
   } else if (step === SETUP_STEPS.CATEGORIES) {
-    router.replace({ name: 'setup-category' })
+    router.replace({ name: 'setup-categories' })
   } else if (step === SETUP_STEPS.COMPLETE) {
     router.replace({ name: 'dashboard' })
   } else {
