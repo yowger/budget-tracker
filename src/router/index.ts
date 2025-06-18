@@ -69,6 +69,11 @@ const router = createRouter({
           component: () => import('@/features/setup/views/SetupGroupView.vue'),
         },
         {
+          path: 'categories',
+          name: 'setup-categories',
+          component: () => import('@/features/setup/views/SetupCategoriesView.vue'),
+        },
+        {
           path: 'currency',
           name: 'setup-currency',
           component: () => import('@/features/setup/views/SetupCurrencyView.vue'),
