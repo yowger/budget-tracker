@@ -35,11 +35,13 @@ import { type FormSubmitEvent } from '@primevue/forms'
 import { ref } from 'vue'
 import { useRouter } from 'vue-router'
 
-import useUserStore from '@/stores/user'
+import { useAuth } from '@/composables/useAuth'
 import LoginForm from '@/features/auth/components/LoginForm.vue'
 import { FirebaseError } from 'firebase/app'
+import { useUserStore } from '@/stores/user'
 
 const router = useRouter()
+const { emailLogin, googleLogin } = useAuth()
 const userStore = useUserStore()
 
 const loading = ref(false)
@@ -53,7 +55,7 @@ async function handleSubmit(form: FormSubmitEvent) {
   const { email, password } = form.values
 
   try {
-    await userStore.emailLogin(email, password)
+    await emailLogin(email, password)
 
     handleRedirect()
   } catch (error) {
@@ -66,7 +68,7 @@ async function handleSubmit(form: FormSubmitEvent) {
 
 async function handleGoogleLogin() {
   try {
-    await userStore.googleLogin()
+    await googleLogin()
 
     handleRedirect()
   } catch (error) {

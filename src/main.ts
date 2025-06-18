@@ -10,7 +10,7 @@ import { createApp } from 'vue'
 import App from '@/App.vue'
 import { auth } from '@/includes/firebase'
 import router from '@/router'
-import useUserStore from '@/stores/user'
+import { useUserStore } from '@/stores/user'
 import themeConfig from '@/themes/themeConfig'
 
 const pinia = createPinia()

@@ -121,12 +121,12 @@ import { reactive, ref } from 'vue'
 import { useRouter } from 'vue-router'
 import { z } from 'zod'
 
-import useUserStore from '@/stores/user'
+import { useAuth } from '@/composables/useAuth'
 
 const authErrorMessage = ref<string | null>(null)
 const loading = ref(false)
 const router = useRouter()
-const userStore = useUserStore()
+const { emailRegister, googleLogin } = useAuth()
 
 const registerSchema = z
   .object({
@@ -161,7 +161,7 @@ async function handleRegisterFormSubmit(form: FormSubmitEvent) {
     loading.value = true
 
     try {
-      await userStore.emailRegister(form.values.email, form.values.password)
+      await emailRegister(form.values.email, form.values.password)
 
       router.push({ name: 'dashboard' })
     } catch (error) {
@@ -175,7 +175,7 @@ async function handleRegisterFormSubmit(form: FormSubmitEvent) {
 
 async function handleGoogleRegister(): Promise<void> {
   try {
-    await userStore.googleLogin()
+    await googleLogin()
 
     router.push({ name: 'dashboard' })
   } catch (error) {

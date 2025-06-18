@@ -29,14 +29,14 @@ import { useTemplateRef, ref } from 'vue'
 import { onClickOutside } from '@vueuse/core'
 
 import useLayoutStore from '@/stores/layout'
-import useUserStore from '@/stores/user'
+import { useAuth } from '@/composables/useAuth'
 
 const layout = useLayoutStore()
-const userStore = useUserStore()
+const { signOut } = useAuth()
 
 function handleDropdownSelect(value: string) {
   if (value === 'signout') {
-    userStore.signOut()
+    signOut()
   }
 }
 
