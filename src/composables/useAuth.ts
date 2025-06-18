@@ -49,24 +49,36 @@ export function useAuth() {
   }
 
   async function emailRegister(email: string, password: string) {
-    const result = await createUserWithEmailAndPassword(auth, email, password)
-    const user = result.user
-    const profile = await createUserProfile(user)
-    userStore.setUser(profile)
+    try {
+      const result = await createUserWithEmailAndPassword(auth, email, password)
+      const user = result.user
+      const profile = await createUserProfile(user)
+      userStore.setUser(profile)
+    } catch (error) {
+      throw error
+    }
   }
 
   async function emailLogin(email: string, password: string) {
-    const result = await signInWithEmailAndPassword(auth, email, password)
-    const user = result.user
-    const profile = (await fetchUserProfile(user.uid)) || (await createUserProfile(user))
-    userStore.setUser(profile)
+    try {
+      const result = await signInWithEmailAndPassword(auth, email, password)
+      const user = result.user
+      const profile = (await fetchUserProfile(user.uid)) || (await createUserProfile(user))
+      userStore.setUser(profile)
+    } catch (error) {
+      throw error
+    }
   }
 
   async function googleLogin() {
-    const result = await signInWithPopup(auth, googleProvider)
-    const user = result.user
-    const profile = (await fetchUserProfile(user.uid)) || (await createUserProfile(user))
-    userStore.setUser(profile)
+    try {
+      const result = await signInWithPopup(auth, googleProvider)
+      const user = result.user
+      const profile = (await fetchUserProfile(user.uid)) || (await createUserProfile(user))
+      userStore.setUser(profile)
+    } catch (error) {
+      throw error
+    }
   }
 
   async function signOut() {
