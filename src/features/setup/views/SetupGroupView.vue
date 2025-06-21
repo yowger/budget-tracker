@@ -17,7 +17,7 @@
       </p>
     </div>
 
-    <p v-if="!errorMessage" class="text-red-500 my-4">{{ errorMessage }}</p>
+    <p v-if="errorMessage" class="text-red-500 my-4">{{ errorMessage }}</p>
 
     <Button
       :disabled="isEmpty || isInvalidGroupName || isCreatingGroup"
@@ -61,7 +61,7 @@ async function handleCreateGroup() {
   }
 
   createGroup(
-    { groupName: groupName.value, ownerId: user.uid, members: [] },
+    { groupName: groupName.value, ownerId: user.uid, members: [user.uid] },
     {
       onSuccess: (updatedUser) => {
         setUser({
