@@ -88,13 +88,13 @@ const router = createRouter({
     {
       path: '/login',
       name: 'login',
-      meta: { redirectIfAuth: true },
+      meta: { guest: true },
       component: () => import('@/features/auth/views/LoginView.vue'),
     },
     {
       path: '/register',
       name: 'register',
-      meta: { redirectIfAuth: true },
+      meta: { guest: true },
       component: () => import('@/features/auth/views/RegisterView.vue'),
     },
     {
@@ -114,12 +114,14 @@ router.beforeEach((to, _from, next) => {
   const userStore = useUserStore()
   const { user } = userStore
 
-  const requiresAuth = to.meta.requiresAuth === true
-  const requiresSetup = to.meta.requiresSetup === true
   const isAuthenticated = !!user?.uid
   const isSetupComplete = user?.setupStep === 'complete'
 
-  if (!requiresAuth) {
+  if (to.meta.guest && isAuthenticated) {
+    return next('/')
+  }
+
+  if (!to.meta.requiresAuth) {
     return next()
   }
 
@@ -129,7 +131,7 @@ router.beforeEach((to, _from, next) => {
     return next({ name: 'login' })
   }
 
-  if (requiresSetup && !isSetupComplete) {
+  if (to.meta.requiresSetup && !isSetupComplete) {
     return next('/setup')
   }
 

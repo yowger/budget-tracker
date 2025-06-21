@@ -12,10 +12,10 @@ import { SETUP_STEPS } from '@/constants/setupSteps'
 import { useUserStore } from '@/stores/user'
 
 const router = useRouter()
-const userStore = useUserStore()
+const { user } = useUserStore()
 
 onMounted(() => {
-  const step = userStore.user.setupStep
+  const step = user.setupStep
 
   if (step === SETUP_STEPS.GROUP) {
     router.replace({ name: 'setup-group' })

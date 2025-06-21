@@ -13,10 +13,10 @@ const router = useRouter()
 
 userStore.$subscribe(
   (_mutation, state) => {
-    const isLoggedOut = !state.user?.uid
+    const isAuthenticated = !!state.user?.uid
     const routeRequiresAuth = router.currentRoute.value.meta.requiresAuth
 
-    if (isLoggedOut && routeRequiresAuth) {
+    if (!isAuthenticated && routeRequiresAuth) {
       router.push({ name: 'login' })
     }
   },

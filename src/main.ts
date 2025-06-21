@@ -12,10 +12,11 @@ import { auth } from '@/includes/firebase'
 import router from '@/router'
 import { useUserStore } from '@/stores/user'
 import themeConfig from '@/themes/themeConfig'
+import { getUser } from '@/api/useGetUser'
 
-const pinia = createPinia()
 let app: ReturnType<typeof createApp> | undefined
 
+const pinia = createPinia()
 const queryClient = new QueryClient({
   defaultOptions: {
     queries: {
@@ -25,26 +26,38 @@ const queryClient = new QueryClient({
   },
 })
 
-auth.onAuthStateChanged((user) => {
+async function initUserState(user: typeof auth.currentUser) {
+  const userStore = useUserStore()
+
+  if (!user) {
+    userStore.clearUser()
+    return
+  }
+
+  try {
+    const userProfile = await getUser(user.uid)
+    if (userProfile) {
+      userStore.setUser(userProfile)
+    } else {
+      userStore.clearUser()
+    }
+  } catch {
+    userStore.clearUser()
+  }
+}
+
+auth.onAuthStateChanged(async (user) => {
   if (!app) {
     app = createApp(App)
 
     app.use(pinia)
+    await initUserState(user)
+
     app.use(router)
-    app.use(VueQueryPlugin, {
-      queryClient,
-    })
+    app.use(VueQueryPlugin, { queryClient })
     app.use(PrimeVue, themeConfig)
     app.use(ConfirmationService)
     app.use(ToastService)
-
-    const userStore = useUserStore()
-
-    if (user) {
-      userStore.setUser(user)
-    } else {
-      userStore.clearUser()
-    }
 
     app.mount('#app')
   }
