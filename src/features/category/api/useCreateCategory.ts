@@ -1,6 +1,7 @@
 import { useMutation, useQueryClient } from '@tanstack/vue-query'
 import { addDoc, collection, serverTimestamp } from 'firebase/firestore'
 
+import { QUERY_KEYS } from '@/features/category/api/queryKeys'
 import { db } from '@/includes/firebase'
 
 export interface CreateCategoryInput {
@@ -25,7 +26,7 @@ export function useCreateCategory() {
   return useMutation({
     mutationFn: addCategory,
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['categories'] })
+      queryClient.invalidateQueries({ queryKey: QUERY_KEYS.categories })
     },
   })
 }
