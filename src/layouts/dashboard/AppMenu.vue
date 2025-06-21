@@ -13,7 +13,7 @@
 <script setup lang="ts">
 import { ref } from 'vue'
 
-import AppMenuItem from '@/layouts/AppMenuItem.vue'
+import AppMenuItem from '@/layouts/dashboard/AppMenuItem.vue'
 
 const menuItems = ref([
   {

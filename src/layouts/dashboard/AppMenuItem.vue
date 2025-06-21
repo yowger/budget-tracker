@@ -33,7 +33,7 @@
 </template>
 
 <script setup lang="ts">
-import AppMenuItem from '@/layouts/AppMenuItem.vue'
+import AppMenuItem from '@/layouts/dashboard/AppMenuItem.vue'
 
 interface MenuItem {
   label: string

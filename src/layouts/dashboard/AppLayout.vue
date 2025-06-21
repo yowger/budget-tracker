@@ -38,9 +38,9 @@
 import { computed, useTemplateRef } from 'vue'
 import { onClickOutside } from '@vueuse/core'
 
-import AppFooter from '@/layouts/AppFooter.vue'
-import AppSidebar from '@/layouts/AppSidebar.vue'
-import AppTopbar from '@/layouts/AppTopbar.vue'
+import AppFooter from '@/layouts/dashboard/AppFooter.vue'
+import AppSidebar from '@/layouts/dashboard/AppSidebar.vue'
+import AppTopbar from '@/layouts/dashboard/AppTopbar.vue'
 import useLayoutStore from '@/stores/layout'
 
 const layout = useLayoutStore()

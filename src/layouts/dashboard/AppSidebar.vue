@@ -16,5 +16,5 @@ const props = defineProps<{
   mobileClasses: string
 }>()
 
-import AppMenu from '@/layouts/AppMenu.vue'
+import AppMenu from '@/layouts/dashboard/AppMenu.vue'
 </script>

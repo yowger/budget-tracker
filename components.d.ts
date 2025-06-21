@@ -9,13 +9,13 @@ export {}
 declare module 'vue' {
   export interface GlobalComponents {
     AppBreadCrumb: typeof import('./src/components/AppBreadCrumb.vue')['default']
-    AppFooter: typeof import('./src/layouts/AppFooter.vue')['default']
-    AppLayout: typeof import('./src/layouts/AppLayout.vue')['default']
-    AppMenu: typeof import('./src/layouts/AppMenu.vue')['default']
-    AppMenuItem: typeof import('./src/layouts/AppMenuItem.vue')['default']
-    AppProfileDropdown: typeof import('./src/layouts/AppProfileDropdown.vue')['default']
-    AppSidebar: typeof import('./src/layouts/AppSidebar.vue')['default']
-    AppTopbar: typeof import('./src/layouts/AppTopbar.vue')['default']
+    AppFooter: typeof import('./src/layouts/dashboard/AppFooter.vue')['default']
+    AppLayout: typeof import('./src/layouts/dashboard/AppLayout.vue')['default']
+    AppMenu: typeof import('./src/layouts/dashboard/AppMenu.vue')['default']
+    AppMenuItem: typeof import('./src/layouts/dashboard/AppMenuItem.vue')['default']
+    AppProfileDropdown: typeof import('./src/layouts/dashboard/AppProfileDropdown.vue')['default']
+    AppSidebar: typeof import('./src/layouts/dashboard/AppSidebar.vue')['default']
+    AppTopbar: typeof import('./src/layouts/dashboard/AppTopbar.vue')['default']
     Avatar: typeof import('primevue/avatar')['default']
     Badge: typeof import('primevue/badge')['default']
     Button: typeof import('primevue/button')['default']
@@ -47,7 +47,10 @@ declare module 'vue' {
     RouterView: typeof import('vue-router')['RouterView']
     RowSelect: typeof import('./src/components/base/RowSelect.vue')['default']
     Select: typeof import('primevue/select')['default']
+    SetupLayout: typeof import('./src/layouts/setup/SetupLayout.vue')['default']
+    SetupTopbar: typeof import('./src/layouts/setup/SetupTopbar.vue')['default']
     Toast: typeof import('primevue/toast')['default']
+    ToolBar: typeof import('primevue/toolbar')['default']
     TransactionForm: typeof import('./src/components/forms/TransactionForm.vue')['default']
   }
   export interface ComponentCustomProperties {

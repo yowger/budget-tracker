@@ -1,6 +1,7 @@
 import { createRouter, createWebHistory } from 'vue-router'
 
-import AppLayout from '@/layouts/AppLayout.vue'
+import AppLayout from '@/layouts/dashboard/AppLayout.vue'
+import SetupLayout from '@/layouts/setup/SetupLayout.vue'
 import { useUserStore } from '@/stores/user'
 
 const router = createRouter({
@@ -53,6 +54,7 @@ const router = createRouter({
     {
       path: '/setup',
       name: 'setup',
+      component: SetupLayout,
       meta: {
         requiresAuth: true,
         requiresSetup: false,
