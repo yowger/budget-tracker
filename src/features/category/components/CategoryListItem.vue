@@ -1,22 +1,23 @@
 <template>
   <li
-    class="flex justify-between items-center gap-3"
+    class="transition hover:bg-gray-100 dark:hover:bg-gray-800 rounded-md p-2 flex justify-between items-center gap-3"
     :class="{ 'opacity-50 pointer-events-none': isDeleting }"
   >
     <div class="p-1">
-      <CheckBox binary />
+      <check-box binary :modelValue="checked" @change="$emit('check')" />
     </div>
 
     <div class="flex items-center gap-2 flex-1 overflow-hidden">
       <div class="flex-none">
         <i
-          :class="[category.icon, 'rounded-full text-white p-2 text-sm']"
+          :class="[category.icon ? category.icon : 'pi pi-question']"
+          class="rounded-full text-white p-2 text-sm"
           :style="{ backgroundColor: category.color ? category.color : '#3B82F6' }"
         ></i>
       </div>
 
       <span class="font-medium basis-1/4 truncate">{{ category.name }} </span>
-      <span class="text-sm text-gray-500 truncate basis-3/4">
+      <span v-if="showTransactions" class="text-sm text-gray-500 truncate basis-3/4">
         {{ category.transactions }} transaction
       </span>
     </div>
@@ -43,6 +44,7 @@
 
 <script setup lang="ts">
 const emit = defineEmits<{
+  (e: 'check'): void
   (e: 'delete', id: string): void
   (e: 'archive', id: string): void
 }>()
@@ -56,11 +58,16 @@ const props = withDefaults(
       color: string
       transactions: number
     }
-    showActions?: boolean
+    checked?: boolean
     isDeleting?: boolean
+    modelValue?: boolean
+    showActions?: boolean
+    showTransactions?: boolean
   }>(),
   {
     showActions: true,
+    showTransactions: true,
+    checked: false,
   },
 )
 

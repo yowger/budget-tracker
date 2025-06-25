@@ -4,19 +4,16 @@
 
     <category-list-item-skeleton v-if="categoriesLoading" />
     <ul v-else>
-      <li
+      <category-list-item
         v-for="category in categories"
         :key="category.id"
-        class="transition hover:bg-gray-100 dark:hover:bg-gray-800 rounded-md p-2"
-      >
-        <category-list-item
-          :category="category"
-          :is-deleting="category.isDeleting"
-          :show-actions="showActions"
-          @delete="onDelete"
-          @archive="onArchive"
-        />
-      </li>
+        :category="category"
+        :is-deleting="category.isDeleting"
+        :show-actions="showActions"
+        :show-transactions="showTransactions"
+        @delete="onDelete"
+        @archive="onArchive"
+      />
     </ul>
   </section>
 </template>
@@ -42,10 +39,12 @@ withDefaults(
       isDeleting?: boolean
     }[]
     showActions?: boolean
+    showTransactions?: boolean
     categoriesLoading?: boolean
   }>(),
   {
     showActions: true,
+    showTransactions: true,
   },
 )
 
