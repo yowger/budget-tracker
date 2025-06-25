@@ -4,18 +4,7 @@ import { useQuery } from '@tanstack/vue-query'
 import { icons } from '@/constants/icons'
 import { db } from '@/includes/firebase'
 import { QUERY_KEYS } from '@/features/category/api/queryKeys'
-
-export type Category = {
-  id: string
-  name: string
-  type: 'expense' | 'income'
-  icon: string
-  color: string
-  transactions: 0
-  isArchived: boolean
-  createdAt?: unknown
-  updatedAt?: unknown
-}
+import type { Category } from '@/types/Category'
 
 async function getCategories(userId: string): Promise<Category[]> {
   const q = query(collection(db, 'categories'), where('uid', '==', userId))

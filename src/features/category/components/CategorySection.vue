@@ -2,7 +2,7 @@
   <section>
     <h3 class="text-lg font-semibold mb-3">{{ title }}</h3>
 
-    <CategoryListItemSkeleton v-if="categoriesLoading" />
+    <category-list-item-skeleton v-if="categoriesLoading" />
     <ul v-else>
       <li
         v-for="category in categories"
@@ -12,6 +12,7 @@
         <category-list-item
           :category="category"
           :is-deleting="category.isDeleting"
+          :show-actions="showActions"
           @delete="onDelete"
           @archive="onArchive"
         />
@@ -29,18 +30,24 @@ const emit = defineEmits<{
   (e: 'archive', categoryId: string): void
 }>()
 
-defineProps<{
-  title: string
-  categories: {
-    id: string
-    name: string
-    icon: string
-    color: string
-    transactions: number
-    isDeleting?: boolean
-  }[]
-  categoriesLoading?: boolean
-}>()
+withDefaults(
+  defineProps<{
+    title: string
+    categories: {
+      id: string
+      name: string
+      icon: string
+      color: string
+      transactions: number
+      isDeleting?: boolean
+    }[]
+    showActions?: boolean
+    categoriesLoading?: boolean
+  }>(),
+  {
+    showActions: true,
+  },
+)
 
 function onDelete(categoryId: string) {
   emit('delete', categoryId)

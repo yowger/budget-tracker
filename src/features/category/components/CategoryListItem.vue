@@ -21,7 +21,7 @@
       </span>
     </div>
 
-    <div class="flex gap-3">
+    <div v-if="showActions" class="flex gap-3">
       <Button icon="pi pi-cog" aria-label="edit" size="small"></Button>
       <Button
         icon="pi pi-eye"
@@ -47,16 +47,22 @@ const emit = defineEmits<{
   (e: 'archive', id: string): void
 }>()
 
-const props = defineProps<{
-  category: {
-    id: string
-    name: string
-    icon: string
-    color: string
-    transactions: number
-  }
-  isDeleting?: boolean
-}>()
+const props = withDefaults(
+  defineProps<{
+    category: {
+      id: string
+      name: string
+      icon: string
+      color: string
+      transactions: number
+    }
+    showActions?: boolean
+    isDeleting?: boolean
+  }>(),
+  {
+    showActions: true,
+  },
+)
 
 function handleDelete() {
   emit('delete', props.category.id)

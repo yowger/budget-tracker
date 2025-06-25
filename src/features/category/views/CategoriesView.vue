@@ -4,7 +4,7 @@
       <div class="space-y-8">
         <category-form
           @submit="handleSubmit"
-          :is-submitting="createCategoryPending"
+          :is-submitting="createCategoryPending || deleteCategoryPending"
         ></category-form>
 
         <category-section
@@ -41,16 +41,13 @@ import { computed, ref } from 'vue'
 import { useConfirm } from 'primevue/useconfirm'
 import { useToast } from 'primevue/usetoast'
 
-import {
-  useCreateCategory,
-  type CreateCategoryInput,
-} from '@/features/category/api/useCreateCategory'
+import { useCreateCategory } from '@/features/category/api/useCreateCategory'
 import { useGetCategories } from '@/features/category/api/useGetCategories'
 import { useDeleteCategory } from '@/features/category/api/useDeleteCategory'
 import type { CategoryFormSubmitEvent } from '@/features/category/components/CategoryForm.vue'
 import CategoryForm from '@/features/category/components/CategoryForm.vue'
 import CategorySection from '@/features/category/components/CategorySection.vue'
-import useUserStore from '@/stores/user'
+import { useUserStore } from '@/stores/user'
 
 const deletingCategoryIds = ref<Set<string>>(new Set())
 const toast = useToast()
