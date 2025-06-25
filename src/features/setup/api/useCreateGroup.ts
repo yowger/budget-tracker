@@ -12,17 +12,18 @@ export interface CreateGroupInput {
   members: string[]
 }
 
-async function createGroup(group: CreateGroupInput): Promise<UserState> {
+async function createGroup(groupInput: CreateGroupInput): Promise<UserState> {
   const groupId = crypto.randomUUID()
   const groupRef = doc(db, 'groups', groupId)
 
   await setDoc(groupRef, {
     id: groupId,
-    ...group,
+    ...groupInput,
+    preferredCurrencies: [],
     createdAt: serverTimestamp(),
   })
 
-  const userRef = doc(db, 'users', group.ownerId)
+  const userRef = doc(db, 'users', groupInput.ownerId)
 
   await updateDoc(userRef, {
     groupIds: arrayUnion(groupId),

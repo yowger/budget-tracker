@@ -39,7 +39,7 @@ const groupName = ref('')
 const errorMessage = ref('')
 const touched = ref(false)
 
-const { mutate: createGroup, isPending: isCreatingGroup } = useCreateGroup()
+const { mutate: createGroupAndContinue, isPending: isCreatingGroup } = useCreateGroup()
 const router = useRouter()
 const { user, setUser } = useUserStore()
 
@@ -60,7 +60,7 @@ async function handleCreateGroup() {
     return
   }
 
-  createGroup(
+  createGroupAndContinue(
     { groupName: groupName.value, ownerId: user.uid, members: [user.uid] },
     {
       onSuccess: (updatedUser) => {

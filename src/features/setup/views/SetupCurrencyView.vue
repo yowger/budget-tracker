@@ -12,8 +12,8 @@
       >
         <Checkbox
           :inputId="currency.id"
-          :value="currency"
-          v-model="preferredCurrencies"
+          :value="currency.id"
+          v-model="preferredCurrencyCodes"
           size="small"
           class="mr-2"
         />
@@ -26,20 +26,48 @@
     </div>
 
     <div class="mt-4 text-right">
-      <Button label="Next" @click="saveAndContinue" :disabled="preferredCurrencies.length === 0" />
+      <Button
+        label="Next"
+        @click="saveCurrencyAndContinue"
+        :disabled="preferredCurrencyCodes.length === 0 || isPending"
+      ></Button>
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
-import { useGetCurrency, type Currency } from '@/features/transactions/api/useGetCurrency'
 import { ref } from 'vue'
-
-const preferredCurrencies = ref<Currency[]>([])
+import { useRouter } from 'vue-router'
+import { useGetCurrency } from '@/features/transactions/api/useGetCurrency'
+import { useUpdateGroup } from '@/features/setup/api/useUpdateGroup'
+import { useUserStore } from '@/stores/user'
 
 const { data: currencies, isLoading, isError } = useGetCurrency()
+const preferredCurrencyCodes = ref<string[]>([])
 
-function saveAndContinue() {
-  console.log(preferredCurrencies.value)
+const router = useRouter()
+const userStore = useUserStore()
+const { mutate: updateGroup, isPending } = useUpdateGroup()
+
+function saveCurrencyAndContinue() {
+  const groupId = userStore.user.defaultGroupId
+
+  if (!groupId) {
+    return
+  }
+
+  updateGroup(
+    {
+      groupId,
+      data: {
+        preferredCurrencies: preferredCurrencyCodes.value,
+      },
+    },
+    {
+      onSuccess: () => {
+        router.push('/setup/icons')
+      },
+    },
+  )
 }
 </script>
