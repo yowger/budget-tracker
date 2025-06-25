@@ -34,12 +34,15 @@ import { useRouter } from 'vue-router'
 
 import { useCreateGroup } from '@/features/setup/api/useCreateGroup'
 import { useUserStore } from '@/stores/user'
+import { useUpdateUser } from '@/api/useUpdateUser'
+import { SETUP_STEPS } from '@/constants/setupSteps'
 
 const groupName = ref('')
 const errorMessage = ref('')
 const touched = ref(false)
 
-const { mutate: createGroupAndContinue, isPending: isCreatingGroup } = useCreateGroup()
+const { mutateAsync: createGroupAndContinue, isPending: isCreatingGroup } = useCreateGroup()
+const { mutate: updateUser } = useUpdateUser()
 const router = useRouter()
 const { user, setUser } = useUserStore()
 
@@ -60,20 +63,31 @@ async function handleCreateGroup() {
     return
   }
 
-  createGroupAndContinue(
-    { groupName: groupName.value, ownerId: user.uid, members: [user.uid] },
-    {
-      onSuccess: (updatedUser) => {
-        setUser({
-          ...updatedUser,
-        })
+  try {
+    const groupResults = await createGroupAndContinue({
+      groupName: groupName.value,
+      ownerId: user.uid,
+      members: [user.uid],
+    })
 
-        router.push({ name: 'setup-currency' })
+    updateUser(
+      {
+        uid: user.uid,
+        data: {
+          defaultGroupId: groupResults.id,
+          setupStep: SETUP_STEPS.CURRENCY,
+        },
       },
-      onError: () => {
-        errorMessage.value = 'failed to create group'
+      {
+        onSuccess: (updatedUser) => {
+          setUser({ ...updatedUser })
+          
+          router.push({ name: 'setup-currency' })
+        },
       },
-    },
-  )
+    )
+  } catch (err) {
+    errorMessage.value = 'Failed to create group. Please try again.'
+  }
 }
 </script>

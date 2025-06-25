@@ -1,10 +1,9 @@
 import { useMutation, useQueryClient } from '@tanstack/vue-query'
-import { arrayUnion, doc, getDoc, serverTimestamp, setDoc, updateDoc } from 'firebase/firestore'
+import { doc, setDoc, serverTimestamp } from 'firebase/firestore'
 
-import { SETUP_STEPS } from '@/constants/setupSteps'
-import { QUERY_KEYS as SETUP_QUERY_KEYS } from '@/features/setup/api/queryKeys'
 import { db } from '@/includes/firebase'
-import type { UserState } from '@/stores/user'
+import { QUERY_KEYS as SETUP_QUERY_KEYS } from './queryKeys'
+import type { Group } from '@/types/Group'
 
 export interface CreateGroupInput {
   groupName: string
@@ -12,27 +11,20 @@ export interface CreateGroupInput {
   members: string[]
 }
 
-async function createGroup(groupInput: CreateGroupInput): Promise<UserState> {
+async function createGroup(groupInput: CreateGroupInput): Promise<Group> {
   const groupId = crypto.randomUUID()
   const groupRef = doc(db, 'groups', groupId)
 
-  await setDoc(groupRef, {
+  const newGroup: Group = {
     id: groupId,
     ...groupInput,
     preferredCurrencies: [],
     createdAt: serverTimestamp(),
-  })
+  }
 
-  const userRef = doc(db, 'users', groupInput.ownerId)
+  await setDoc(groupRef, newGroup)
 
-  await updateDoc(userRef, {
-    groupIds: arrayUnion(groupId),
-    defaultGroupId: groupId,
-    setupStep: SETUP_STEPS.CURRENCY,
-  })
-
-  const updatedSnapshot = await getDoc(userRef)
-  return updatedSnapshot.data() as UserState
+  return newGroup
 }
 
 export function useCreateGroup() {
@@ -40,8 +32,10 @@ export function useCreateGroup() {
 
   return useMutation({
     mutationFn: createGroup,
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: SETUP_QUERY_KEYS.group })
+    onSuccess: (data) => {
+      queryClient.invalidateQueries({
+        queryKey: [SETUP_QUERY_KEYS.group, data.id],
+      })
     },
   })
 }

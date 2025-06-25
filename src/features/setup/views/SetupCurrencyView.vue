@@ -29,7 +29,7 @@
       <Button
         label="Next"
         @click="saveCurrencyAndContinue"
-        :disabled="preferredCurrencyCodes.length === 0 || isPending"
+        :disabled="preferredCurrencyCodes.length === 0 || isUpdatingGroup || isUpdatingUser"
       ></Button>
     </div>
   </div>
@@ -41,20 +41,23 @@ import { useRouter } from 'vue-router'
 import { useGetCurrency } from '@/features/transactions/api/useGetCurrency'
 import { useUpdateGroup } from '@/features/setup/api/useUpdateGroup'
 import { useUserStore } from '@/stores/user'
+import { useUpdateUser } from '@/api/useUpdateUser'
+import { SETUP_STEPS } from '@/constants/setupSteps'
 
 const { data: currencies, isLoading, isError } = useGetCurrency()
 const preferredCurrencyCodes = ref<string[]>([])
 
 const router = useRouter()
 const userStore = useUserStore()
-const { mutate: updateGroup, isPending } = useUpdateGroup()
+
+const { mutate: updateGroup, isPending: isUpdatingGroup } = useUpdateGroup()
+const { mutate: updateUser, isPending: isUpdatingUser } = useUpdateUser()
 
 function saveCurrencyAndContinue() {
   const groupId = userStore.user.defaultGroupId
+  const userId = userStore.user.uid
 
-  if (!groupId) {
-    return
-  }
+  if (!groupId || !userId) return
 
   updateGroup(
     {
@@ -65,7 +68,21 @@ function saveCurrencyAndContinue() {
     },
     {
       onSuccess: () => {
-        router.push('/setup/icons')
+        updateUser(
+          {
+            uid: userId,
+            data: {
+              setupStep: SETUP_STEPS.CATEGORIES,
+            },
+          },
+          {
+            onSuccess: (updatedUser) => {
+              userStore.setUser({ ...updatedUser })
+              
+              router.push({ name: 'setup-categories' })
+            },
+          },
+        )
       },
     },
   )

@@ -1,4 +1,4 @@
-import { Timestamp } from 'firebase/firestore'
+import { FieldValue, Timestamp } from 'firebase/firestore'
 
 export interface Group {
   id: string
@@ -6,5 +6,5 @@ export interface Group {
   ownerId: string
   members: string[]
   preferredCurrencies: string[]
-  createdAt: Timestamp
+  createdAt: Timestamp | FieldValue | null
 }

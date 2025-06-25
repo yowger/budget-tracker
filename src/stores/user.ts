@@ -1,20 +1,7 @@
 import { defineStore } from 'pinia'
-import { Timestamp, FieldValue } from 'firebase/firestore'
 
-import { SETUP_STEPS, type SetupStep } from '@/constants/setupSteps'
-
-export type UserState = {
-  uid: string | null
-  email: string | null
-  displayName: string | null
-  photoURL: string | null
-  groupIds: string[]
-  defaultGroupId: string | null
-  defaultCurrencyId: string | null
-  preferredCurrencies: string[]
-  setupStep: SetupStep
-  createdAt: Timestamp | FieldValue | null
-}
+import { SETUP_STEPS } from '@/constants/setupSteps'
+import type { User } from '@/types/User'
 
 export const useUserStore = defineStore('user', {
   state: () => ({
@@ -29,11 +16,11 @@ export const useUserStore = defineStore('user', {
       preferredCurrencies: [],
       setupStep: SETUP_STEPS.GROUP,
       createdAt: null,
-    } as UserState,
+    } as User,
     redirectAfterLogin: null as string | null,
   }),
   actions: {
-    setUser(user: Partial<UserState>) {
+    setUser(user: Partial<User>) {
       this.user = {
         ...this.user,
         ...user,
