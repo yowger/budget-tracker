@@ -41,8 +41,8 @@ const groupName = ref('')
 const errorMessage = ref('')
 const touched = ref(false)
 
-const { mutateAsync: createGroupAndContinue, isPending: isCreatingGroup } = useCreateGroup()
-const { mutate: updateUser } = useUpdateUser()
+const { mutateAsync: createGroup, isPending: isCreatingGroup } = useCreateGroup()
+const { mutateAsync: updateUser } = useUpdateUser()
 const router = useRouter()
 const { user, setUser } = useUserStore()
 
@@ -64,28 +64,22 @@ async function handleCreateGroup() {
   }
 
   try {
-    const groupResults = await createGroupAndContinue({
+    const groupResults = await createGroup({
       groupName: groupName.value,
       ownerId: user.uid,
       members: [user.uid],
     })
 
-    updateUser(
-      {
-        uid: user.uid,
-        data: {
-          defaultGroupId: groupResults.id,
-          setupStep: SETUP_STEPS.CURRENCY,
-        },
+    const updatedUser = await updateUser({
+      uid: user.uid,
+      data: {
+        defaultGroupId: groupResults.id,
+        setupStep: SETUP_STEPS.CURRENCY,
       },
-      {
-        onSuccess: (updatedUser) => {
-          setUser({ ...updatedUser })
-          
-          router.push({ name: 'setup-currency' })
-        },
-      },
-    )
+    })
+
+    setUser({ ...updatedUser })
+    router.push({ name: 'setup-currency' })
   } catch (err) {
     errorMessage.value = 'Failed to create group. Please try again.'
   }
