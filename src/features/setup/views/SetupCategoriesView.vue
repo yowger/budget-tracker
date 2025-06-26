@@ -16,6 +16,7 @@
           :checked="selectedIncomeIds.has(category.id)"
           :showActions="false"
           :showTransactions="false"
+          :disabled="isLoading"
           @check="() => toggleCategory(selectedIncomeIds, category.id)"
         />
       </ul>
@@ -31,71 +32,110 @@
           :checked="selectedExpenseIds.has(category.id)"
           :showActions="false"
           :showTransactions="false"
+          :disabled="isLoading"
           @check="() => toggleCategory(selectedExpenseIds, category.id)"
         />
       </ul>
     </div>
 
     <div class="text-right mt-6">
-      <Button label="Finish Setup" @click="handleFinish"></Button>
+      <Button
+        label="Finish Setup"
+        @click="handleFinish"
+        :disabled="isLoading"
+        :loading="isLoading"
+      ></Button>
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
 import { ref } from 'vue'
+import { useRouter } from 'vue-router'
+
 import CategoryListItem from '@/features/category/components/CategoryListItem.vue'
+import { useCreateCategories } from '@/features/category/api/useCreateCategories'
+import { useUserStore } from '@/stores/user'
+import { useUpdateUser } from '@/api/useUpdateUser'
+import { SETUP_STEPS } from '@/constants/setupSteps'
+import type { CreateCategoriesInput } from '@/features/category/api/useCreateCategories'
 
 const incomeCategories = [
-  { id: 'salary', name: 'Salary', icon: 'pi pi-briefcase', color: '#4CAF50', transactions: 0 },
-  { id: 'freelance', name: 'Freelance', icon: 'pi pi-wallet', color: '#66BB6A', transactions: 0 },
-  { id: 'gift', name: 'Gift', icon: 'pi pi-gift', color: '#81C784', transactions: 0 },
-  {
-    id: 'investment',
-    name: 'Investment',
-    icon: 'pi pi-chart-line',
-    color: '#388E3C',
-    transactions: 0,
-  },
-  { id: 'refund', name: 'Refund', icon: 'pi pi-undo', color: '#43A047', transactions: 0 },
+  { id: 'salary', name: 'Salary', icon: 'pi pi-briefcase', color: '#4CAF50' },
+  { id: 'freelance', name: 'Freelance', icon: 'pi pi-wallet', color: '#66BB6A' },
+  { id: 'gift', name: 'Gift', icon: 'pi pi-gift', color: '#81C784' },
+  { id: 'investment', name: 'Investment', icon: 'pi pi-chart-line', color: '#388E3C' },
+  { id: 'refund', name: 'Refund', icon: 'pi pi-undo', color: '#43A047' },
 ]
 
 const expenseCategories = [
-  { id: 'food', name: 'Food & Dining', icon: 'pi pi-shop', color: '#EF5350', transactions: 0 },
-  { id: 'transport', name: 'Transport', icon: 'pi pi-car', color: '#FF9800', transactions: 0 },
-  { id: 'rent', name: 'Rent', icon: 'pi pi-home', color: '#E91E63', transactions: 0 },
-  { id: 'utilities', name: 'Utilities', icon: 'pi pi-bolt', color: '#9C27B0', transactions: 0 },
-  {
-    id: 'entertainment',
-    name: 'Entertainment',
-    icon: 'pi pi-play',
-    color: '#03A9F4',
-    transactions: 0,
-  },
-  {
-    id: 'shopping',
-    name: 'Shopping',
-    icon: 'pi pi-shopping-bag',
-    color: '#FF7043',
-    transactions: 0,
-  },
-  { id: 'health', name: 'Health', icon: 'pi pi-heart', color: '#E53935', transactions: 0 },
-  { id: 'travel', name: 'Travel', icon: 'pi pi-globe', color: '#00ACC1', transactions: 0 },
+  { id: 'food', name: 'Food & Dining', icon: 'pi pi-shop', color: '#EF5350' },
+  { id: 'transport', name: 'Transport', icon: 'pi pi-car', color: '#FF9800' },
+  { id: 'rent', name: 'Rent', icon: 'pi pi-home', color: '#E91E63' },
+  { id: 'utilities', name: 'Utilities', icon: 'pi pi-bolt', color: '#9C27B0' },
+  { id: 'entertainment', name: 'Entertainment', icon: 'pi pi-play', color: '#03A9F4' },
+  { id: 'shopping', name: 'Shopping', icon: 'pi pi-shopping-bag', color: '#FF7043' },
+  { id: 'health', name: 'Health', icon: 'pi pi-heart', color: '#E53935' },
+  { id: 'travel', name: 'Travel', icon: 'pi pi-globe', color: '#00ACC1' },
 ]
 
 const selectedIncomeIds = ref(new Set(incomeCategories.map((c) => c.id)))
 const selectedExpenseIds = ref(new Set(expenseCategories.map((c) => c.id)))
 
+const isLoading = ref(false)
+
+const router = useRouter()
+const { user, setUser } = useUserStore()
+const { mutateAsync: createCategories } = useCreateCategories()
+const { mutateAsync: updateUser } = useUpdateUser()
+
 function toggleCategory(set: Set<string>, id: string) {
-  if (set.has(id)) set.delete(id)
-  else set.add(id)
+  set.has(id) ? set.delete(id) : set.add(id)
 }
 
-function handleFinish() {
-  const selected = [
-    ...incomeCategories.filter((c) => selectedIncomeIds.value.has(c.id)),
-    ...expenseCategories.filter((c) => selectedExpenseIds.value.has(c.id)),
+async function handleFinish() {
+  if (!user.uid || !user.defaultGroupId) {
+    console.warn('Missing user or group.')
+    return
+  }
+
+  isLoading.value = true
+
+  const selectedCategories: CreateCategoriesInput[] = [
+    ...incomeCategories
+      .filter((c) => selectedIncomeIds.value.has(c.id))
+      .map((c) => ({
+        groupId: user.defaultGroupId!,
+        name: c.name,
+        icon: c.icon,
+        color: c.color,
+        type: 'income' as const,
+      })),
+    ...expenseCategories
+      .filter((c) => selectedExpenseIds.value.has(c.id))
+      .map((c) => ({
+        groupId: user.defaultGroupId!,
+        name: c.name,
+        icon: c.icon,
+        color: c.color,
+        type: 'expense' as const,
+      })),
   ]
-  console.log('Selected Categories:', selected)
+
+  try {
+    await createCategories(selectedCategories)
+
+    const updatedUser = await updateUser({
+      uid: user.uid,
+      data: { setupStep: SETUP_STEPS.COMPLETE },
+    })
+
+    setUser({ ...updatedUser })
+    router.push({ name: 'dashboard' })
+  } catch (error) {
+    console.error('Error creating categories:', error)
+  } finally {
+    isLoading.value = false
+  }
 }
 </script>

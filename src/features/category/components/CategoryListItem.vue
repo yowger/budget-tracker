@@ -56,7 +56,7 @@ const props = withDefaults(
       name: string
       icon: string
       color: string
-      transactions: number
+      transactions?: number
     }
     checked?: boolean
     isDeleting?: boolean
